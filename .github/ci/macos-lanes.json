@@ -33,6 +33,7 @@
         "*/src/iosMain/*",
         "*/src/iosTest/*",
         "*/src/iosAppTest/*",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/build.gradle.kts",
         "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/mobileMain/*",
         "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/mobileTest/*",
         "waltid-libraries/*/build.gradle.kts",
@@ -71,6 +72,13 @@
     "compose": {
       "description": "Compose iOS demo and its WalletCore/Swift integration",
       "patterns": [
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/build.gradle.kts",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/commonMain/*",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/commonTest/*",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/mobileMain/*",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/mobileTest/*",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/iosMain/*",
+        "waltid-applications/waltid-wallet-demo-compose/sharedLogic/src/iosTest/*",
         "waltid-applications/waltid-wallet-demo-compose/sharedUI/build.gradle.kts",
         "waltid-applications/waltid-wallet-demo-compose/sharedUI/src/commonMain/*",
         "waltid-applications/waltid-wallet-demo-compose/sharedUI/src/mobileMain/*",
