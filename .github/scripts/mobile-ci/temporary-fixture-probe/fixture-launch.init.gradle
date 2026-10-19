@@ -1,0 +1,18 @@
+allprojects {
+    afterEvaluate {
+        if (name == 'waltid-enterprise-integration-tests') {
+            tasks.register('captureMobileFixtureLaunch') {
+                dependsOn('classes')
+                doLast {
+                    def fixture = tasks.named('enterpriseMobileFixtureServer').get()
+                    def output = new File(project.findProperty('fixtureLaunchOutput'))
+                    output.text = groovy.json.JsonOutput.toJson([
+                        command: [new File(System.getProperty('java.home'), 'bin/java').absolutePath,
+                                  '-cp', fixture.classpath.asPath, fixture.mainClass.get()],
+                        workingDirectory: project.projectDir.absolutePath
+                    ])
+                }
+            }
+        }
+    }
+}
