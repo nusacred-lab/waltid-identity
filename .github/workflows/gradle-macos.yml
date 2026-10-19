@@ -17,9 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - source: main
+          - source: pr-base
             identity: d53d7bc1202a8774e8d41ebd6b147715cdea69d5
             enterprise: 89e95913c9142673defc5aca41bd1e0dc1a9c4b1
+          - source: main
+            identity: d53d7bc1202a8774e8d41ebd6b147715cdea69d5
+            enterprise: 05450052962e805e4c85e42a4fe6432cd7c9a852
           - source: candidate
             identity: f4996d9bfea669c48187f2c0474cfdbed1979bf8
             enterprise: b9e7258c74c54116d5a8bfe72bf2c6d7febdffe4
@@ -44,7 +47,11 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/fixture-control"
           cp probe-harness/.github/scripts/mobile-ci/temporary-fixture-probe/fixture-control.py "$RUNNER_TEMP/fixture-control/"
-          ./gradlew :waltid-enterprise-integration-tests:captureMobileFixtureLaunch             -I "$GITHUB_WORKSPACE/probe-harness/.github/scripts/mobile-ci/temporary-fixture-probe/fixture-launch.init.gradle"             -PfixtureLaunchOutput="$RUNNER_TEMP/fixture-control/fixture-launch.json"             --no-configuration-cache --no-daemon --max-workers=3             -Dorg.gradle.parallel=false '-Dorg.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8'
+          ./gradlew :waltid-enterprise-integration-tests:captureMobileFixtureLaunch \
+            -I "$GITHUB_WORKSPACE/probe-harness/.github/scripts/mobile-ci/temporary-fixture-probe/fixture-launch.init.gradle" \
+            -PfixtureLaunchOutput="$RUNNER_TEMP/fixture-control/fixture-launch.json" \
+            --no-configuration-cache --no-daemon --max-workers=3 \
+            -Dorg.gradle.parallel=false '-Dorg.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8'
       - name: Repeat fresh fixture starts and reused-connection requests
         run: python3 "$RUNNER_TEMP/fixture-control/fixture-control.py"
       - name: Retain bounded experiment evidence
