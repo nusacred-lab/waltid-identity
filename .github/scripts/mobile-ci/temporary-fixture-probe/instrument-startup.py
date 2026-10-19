@@ -1,4 +1,4 @@
-"""Temporary native startup evidence for the unchanged Enterprise iOS execution path."""
+"""Temporary controlled replay: make the fixture ready before cold simulator boot."""
 from pathlib import Path
 import hashlib
 import sys
@@ -53,6 +53,9 @@ replace_once('''        } catch (failure: Exception) {
                 .onFailure { logger.warn("Native startup evidence unavailable", it) }
             runCatching { captureEnterpriseMobileFixtureThreads(fixture, logFile) }
                 .onFailure { logger.warn("JVM startup evidence unavailable", it) }''')
+replace_once('''                runChecked(listOf("xcrun", "simctl", "bootstatus", simulator, "-b"), identityDir)
+                withEnterpriseMobileFixture(resultBundle.parentFile.resolve("$demo-fixture.log")) {''', '''                withEnterpriseMobileFixture(resultBundle.parentFile.resolve("$demo-fixture.log")) {
+                    runChecked(listOf("xcrun", "simctl", "bootstatus", simulator, "-b"), identityDir)''')
 build.write_text(source)
 
 main = root / 'waltid-enterprise-integration-tests/src/main/kotlin/id/walt/enterprise/test/integration/mobile/EnterpriseMobileFixtureServer.kt'
