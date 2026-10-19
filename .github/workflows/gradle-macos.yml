@@ -1,4 +1,4 @@
-name: Enterprise fixture before simulator boot (temporary)
+name: Native XCTest boot readiness control (temporary)
 
 on:
   workflow_dispatch:
@@ -12,141 +12,63 @@ env:
   IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=27.0
 
 jobs:
-  enterprise-ios-mobile-tests:
-    timeout-minutes: 90
+  native-bootstrap:
+    timeout-minutes: 60
     runs-on: xcode-27
+    strategy:
+      fail-fast: false
+      matrix:
+        wait-for-boot: [false, true]
     steps:
-      - name: Checkout all repos with ref fallback
+      - name: Checkout the original failing tuple
         uses: walt-id/waltid-identity/.github/actions/checkout-repos@d689d1e773d6918cc42299b3cf9563a9ebce3ca0
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN || github.token }}
           resolved-refs: >-
-            {"unified":"1fef89185ad62339246905d88c45cbcac37341e6","identity":"f4996d9bfea669c48187f2c0474cfdbed1979bf8","enterprise":"b9e7258c74c54116d5a8bfe72bf2c6d7febdffe4","enterprise_license":"78972ba6237a00e3e867c0a74192e161128375f7"}
-
-      - name: Restore the shared release framework
+            {"unified":"1fef89185ad62339246905d88c45cbcac37341e6","identity":"d5e7b018b0eee561221c4d4b9cdadefa312eeed4","enterprise":"05450052962e805e4c85e42a4fe6432cd7c9a852","enterprise_license":"78972ba6237a00e3e867c0a74192e161128375f7"}
+      - name: Restore the original shared release framework
         uses: actions/download-artifact@v8
         with:
           name: wallet-core-release-1
-          run-id: 39209877733
+          run-id: 39225700406
           github-token: ${{ secrets.GH_ACCESS_TOKEN || github.token }}
           path: ${{ runner.temp }}/wallet-core-artifact
       - name: Verify the shared release framework
         working-directory: waltid-identity
         run: python3 .github/scripts/mobile-ci/wallet-core-artifact.py restore --artifact-dir "$RUNNER_TEMP/wallet-core-artifact"
-
-      - name: Checkout temporary instrumentation
+      - name: Checkout the temporary control
         uses: actions/checkout@v6
         with:
           ref: ${{ github.sha }}
           path: probe-harness
-      - name: Instrument the fixture startup boundary
-        run: python3 probe-harness/.github/scripts/mobile-ci/temporary-fixture-probe/instrument-startup.py waltid-identity-enterprise
-
-      - name: Configure gradle
+      - name: Configure Gradle
         uses: ./waltid-identity/.github/actions/gradle-setup-action
-
-      - name: Execute Enterprise iOS mobile platform tests
-        id: enterprise_ios_mobile_tests
-        continue-on-error: true
-        # Native SDK/UI and Compose UI each build and finalize their own result bundle.
-        timeout-minutes: 75
+      - name: Configure the original iOS build environment
+        uses: ./waltid-identity/.github/actions/ios-build-setup
+        with:
+          gradle-properties-path: waltid-identity/gradle.properties
+      - name: Stop pre-existing simulators on this isolated CI runner
+        run: xcrun simctl shutdown all
+      - name: Run the original provider prerequisite
         run: |
-          exec python3 waltid-identity/.github/scripts/mobile-ci/run-ios-phase.py \
-            --output-dir "$GITHUB_WORKSPACE/ios-ci-logs" enterprise \
-            ./gradlew :waltid-enterprise-integration-tests:enterpriseIosMobileIntegrationTest \
-            --no-configuration-cache --stacktrace \
-            -Penterprise.ios.destination="${IOS_SIMULATOR_DESTINATION}" \
-            -Penterprise.ios.collectTestDiagnostics="${XCODE_TEST_DIAGNOSTICS}" \
-            -Penterprise.ios.walletCoreArtifact="$RUNNER_TEMP/wallet-core-artifact"
+          python3 waltid-identity/.github/scripts/mobile-ci/run-ios-phase.py \
+            --output-dir "$GITHUB_WORKSPACE/native-bootstrap" provider \
+            waltid-identity/.github/scripts/mobile-ci/verify-ios-identity-document-provider.sh \
+            --project-dir waltid-identity/waltid-applications/waltid-wallet-demo-ios/iosApp \
+            --destination "$IOS_SIMULATOR_DESTINATION" --derived-data /tmp/xcode-derived \
+            --app-group group.id.walt.wallet.native --keychain-group-suffix id.walt.wallet.native.shared \
+            --app-bundle-id id.walt.wallet.native --appex-bundle-id id.walt.wallet.native.identitydocumentprovider \
+            --development-team 9BB78CFW7Y --build-setting OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES
+      - name: Exercise three cold native XCTest starts
+        timeout-minutes: 40
         env:
-          XCODE_TEST_DIAGNOSTICS: never
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-
-      - name: Collect Enterprise iOS mobile test reports
-        if: always() && steps.enterprise_ios_mobile_tests.outcome != 'skipped'
-        id: enterprise_ios_test_report
-        run: |
-          REPORT_ROOT="waltid-identity-enterprise/waltid-enterprise-integration-tests/build/ios-test-reports"
-          XCODE_REPORT_DIR="$REPORT_ROOT/xcresult"
-          SOURCE_ROOT="waltid-identity-enterprise/waltid-enterprise-integration-tests/build/ios-test-results"
-
-          rm -rf "$REPORT_ROOT"
-          mkdir -p "$XCODE_REPORT_DIR"
-
-          xcode_report_count=0
-          while IFS= read -r -d '' bundle; do
-            if ! command -v xcresultparser >/dev/null 2>&1; then
-              # See install-and-run-kdoctor: the runner image's untrusted aws/tap makes every
-              # `brew install` emit a tap-trust warning. Drop it first.
-              brew untap aws/tap 2>/dev/null || true
-              brew install xcresultparser
-            fi
-
-            relative_bundle="${bundle#"$SOURCE_ROOT"/}"
-            safe_name=$(printf '%s' "$relative_bundle" | tr '/ ' '__' | LC_ALL=C tr -c '[:alnum:]_.-' '_')
-            report_file="$XCODE_REPORT_DIR/${xcode_report_count}-${safe_name}.xml"
-
-            if xcresultparser "$bundle" --output-format=junit > "$report_file"; then
-              echo "Converted Enterprise iOS xcresult bundle to JUnit: $relative_bundle"
-              xcode_report_count=$((xcode_report_count + 1))
-            else
-              echo "::warning::Failed to convert Enterprise iOS xcresult bundle at $bundle"
-              rm -f "$report_file"
-            fi
-          done < <(find "$SOURCE_ROOT" -name '*.xcresult' -prune -print0 2>/dev/null || true)
-
-          {
-            echo "## Enterprise iOS Mobile Test Report Collection"
-            echo "- Xcode result bundles converted: $xcode_report_count"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-          if (( xcode_report_count == 0 )); then
-            echo "::warning::No Enterprise iOS mobile test reports found under $SOURCE_ROOT"
-            echo "has_report=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "has_report=true" >> "$GITHUB_OUTPUT"
-
-      - name: Require native and Compose batch test execution
-        if: always() && steps.enterprise_ios_mobile_tests.outcome != 'skipped'
-        run: |
-          for demo in native compose; do
-            if [[ "$demo" == native ]]; then
-              report='*iosAppEnterpriseTests.xcresult.xml'
-              targets=(iosAppEnterpriseTests.xctest iosAppUITests.xctest)
-            else
-              report='*compose-batch.xcresult.xml'
-              targets=(iosAppUITests.xctest)
-            fi
-            python3 waltid-identity/.github/scripts/mobile-ci/verify_test_results.py \
-              --require-suite "${targets[@]}" \
-              --require-class BatchIssuanceE2ETests \
-              --reports "waltid-identity-enterprise/waltid-enterprise-integration-tests/build/ios-test-reports/xcresult/$report"
-          done
-
-      - name: Upload Enterprise iOS mobile test results
-        if: always() && steps.enterprise_ios_mobile_tests.outcome != 'skipped'
+          WAIT_FOR_BOOT: ${{ matrix.wait-for-boot }}
+        run: bash probe-harness/.github/scripts/mobile-ci/temporary-native-bootstrap-probe.sh
+      - name: Retain every attempt and its diagnostic result
+        if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: enterprise-ios-mobile-test-results
-          path: |
-            waltid-identity-enterprise/waltid-enterprise-integration-tests/build/ios-test-reports/**
-            waltid-identity-enterprise/waltid-enterprise-integration-tests/build/ios-test-results/**
+          name: native-bootstrap-wait-${{ matrix.wait-for-boot }}
+          path: native-bootstrap/**
+          if-no-files-found: error
           retention-days: 7
-
-      - name: Retain failed Enterprise iOS logs
-        if: failure() || cancelled() || steps.enterprise_ios_mobile_tests.outcome == 'failure'
-        uses: actions/upload-artifact@v7
-        with:
-          name: enterprise-ios-failure-logs
-          path: |
-            ios-ci-logs/**
-          retention-days: 7
-
-      - name: Require successful Enterprise iOS tests and reports
-        if: always() && (steps.enterprise_ios_mobile_tests.outcome != 'success' || steps.enterprise_ios_test_report.outputs.has_report != 'true')
-        run: |
-          echo "::error::Enterprise iOS tests did not complete successfully with a test report"
-          exit 1
