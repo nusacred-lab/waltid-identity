@@ -14,7 +14,9 @@ cleanup() {
   if [[ "$status" -ne 0 ]]; then
     for container in "${containers[@]}"; do
       docker inspect --format 'Runtime state: {{.State.Status}}; exit={{.State.ExitCode}}; oom={{.State.OOMKilled}}' "$container" || true
+      docker logs "$container" >"$private/$container.log" 2>&1 || true
     done
+    python3 ci/harness/startup-diagnostics.py "$private" "$evidence/reports" || true
   fi
   for container in "${containers[@]}"; do docker rm -f "$container" >/dev/null 2>&1 || true; done
   if [[ -n "$network" ]]; then docker network rm "$network" >/dev/null 2>&1 || true; fi
