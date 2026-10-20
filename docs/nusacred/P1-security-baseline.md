@@ -255,11 +255,28 @@ CVE-2026-93687 pada dua frontend. Registry resmi belum menyediakan versi perbaik
 saat diperiksa. Dependency review GitHub juga menolak braces. Tidak ada waiver,
 ignore atau perubahan namespace package agar scanner kehilangan temuan.
 
-Riwayat masih mempunyai 2.282 temuan, dikelompokkan secara privat menjadi 361
-nilai berbeda untuk triase. Pengelompokan bukan bukti false positive atau
+Riwayat upstream masih mempunyai 2.282 temuan, dikelompokkan secara privat menjadi
+361 nilai berbeda untuk triase. Pengelompokan bukan bukti false positive atau
 credential aktif. Tiga kelompok AWS/Azure belum mempunyai konfirmasi
 fixture/revocation. Tidak ada percobaan autentikasi atau laporan publik atas
 nilai tersebut. **G1 tetap belum lulus.**
+
+### Satu temuan checksum yang terbukti non-secret
+
+Revisi berikutnya menambah satu temuan generic-api-key pada checksum file hasil
+uji yang namanya memuat kata credential, sehingga hitungan mentah menjadi 2.283.
+Nilainya cocok persis dengan SHA-256 [file outcome publik yang aman](evidence/g1-api2-39454853516-outcome.json):
+hanya schema version, boolean dan status passed; tidak ada credential, key, grant
+atau session ID. Lokasi commit/line dan bukti tercatat pada
+[ledger klasifikasi](../../ci/checksum-finding-review.json).
+
+Hanya fingerprint immutable itu masuk `.gitleaksignore`.
+`ci/verify-checksum-findings.py` memeriksa sumber pada commit asal, baris finding,
+hash byte proof dan schema outcome pada setiap CI. Ignore tambahan yang tidak
+punya bukti atau proof yang berubah ditolak. Uji negatif keduanya telah dilakukan;
+perbandingan set fingerprint memastikan hanya temuan checksum tersebut yang
+berkurang dan **2.282 temuan lain tetap menahan full-history scan**. Ini tidak
+menerapkan exception CVE atau allowlist direktori/riwayat baseline.
 
 ## Gerbang berikutnya
 

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "resolutions": [
+    {
+      "fingerprint": "410d4dd1833055ba9f93071541bd83a6497e522a:docs/nusacred/evidence/g1-api2-39454853516.json:generic-api-key:77",
+      "classification": "verified-non-secret-build-checksum",
+      "sourceCommit": "410d4dd1833055ba9f93071541bd83a6497e522a",
+      "sourceFile": "docs/nusacred/evidence/g1-api2-39454853516.json",
+      "sourceMapEntry": "reports/credential-harness.json",
+      "proofFile": "docs/nusacred/evidence/g1-api2-39454853516-outcome.json",
+      "githubArtifactId": 12280556765,
+      "owner": "nusacred-lab",
+      "reviewedOn": "2026-10-21",
+      "reason": "Exact SHA-256 of a fixed-schema public test outcome containing only booleans and passed status labels. The immutable finding is verified against its source commit and the copied artifact bytes; no credential is present."
+    }
+  ]
+}

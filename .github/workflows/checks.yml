@@ -21,6 +21,8 @@ jobs:
       - run: python3 ci/install_tool.py actionlint "$RUNNER_TEMP/tools"
       - name: Validate workflow syntax and expressions
         run: '"$RUNNER_TEMP/tools/actionlint" -shellcheck="" -pyflakes=""'
+      - name: Verify exact non-secret checksum findings
+        run: python3 ci/verify-checksum-findings.py
       - run: python3 ci/install_tool.py gitleaks "$RUNNER_TEMP/tools"
       - name: Scan complete Git history (redacted)
         run: '"$RUNNER_TEMP/tools/gitleaks" git . --redact --no-banner'

@@ -65,5 +65,5 @@ compile. These jobs must pass before the frontend changes are accepted.
 As of 2026-10-20, local source scanning including development dependencies still
 reports `CVE-2026-85393` in `node-forge` 1.4.0 and `CVE-2026-93687` in `braces`
 3.0.3 in both Nuxt graphs. These remain the latest official registry releases
-observed during review. No waiver or ignore is added. Full-history findings
+observed during review. No CVE waiver or CVE ignore is added. Full-history findings
 also remain open; **G1 stays blocked** until the remaining security work passes.

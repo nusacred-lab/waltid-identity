@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "syntheticData": true,
+  "realHttpServices": true,
+  "issuance": "passed",
+  "walletStorage": "passed",
+  "preview": "passed",
+  "holderBoundPresentation": "passed",
+  "verification": "passed"
+}
