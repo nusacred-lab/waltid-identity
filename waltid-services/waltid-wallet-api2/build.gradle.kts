@@ -7,7 +7,19 @@ plugins {
 
 group = "id.walt"
 
+val baselineCatalog = extensions.getByType<org.gradle.api.artifacts.VersionCatalogsExtension>().named("identityLibs")
+
 dependencies {
+
+    // Align transitive modules with the reviewed catalog, including DNS/proxy modules.
+    implementation(enforcedPlatform("io.netty:netty-bom:${baselineCatalog.findVersion("netty-4_2").get().requiredVersion}"))
+    implementation(platform("com.fasterxml.jackson:jackson-bom:${baselineCatalog.findVersion("jackson-core").get().requiredVersion}"))
+    implementation(platform("tools.jackson:jackson-bom:${baselineCatalog.findVersion("jackson-core-3").get().requiredVersion}"))
+    constraints {
+        add("implementation", "net.minidev:json-smart:${baselineCatalog.findVersion("json-smart-security").get().requiredVersion}") {
+            because("CVE-2024-57699: reject excessive nesting in JSON input")
+        }
+    }
     // The server library contains route handlers, OpenAPI docs, and the WalletResolver
     // interface. It transitively pulls in waltid-openid4vc-wallet (base library).
     // Both the OSS service and the Enterprise service depend on this library.

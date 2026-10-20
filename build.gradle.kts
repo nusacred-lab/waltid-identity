@@ -67,3 +67,51 @@ tasks.register("verifyCoseReplacement") {
         }
     }
 }
+
+// Export the actual three runtime graphs, not the union of test/platform lock entries.
+tasks.register("collectBaselineRuntimeEvidence") {
+    group = "verification"
+    dependsOn(listOf("issuer", "wallet", "verifier").map { ":waltid-services:waltid-$it-api2:buildFatJar" })
+    doLast {
+        fun digest(file: File): String {
+            val md = java.security.MessageDigest.getInstance("SHA-256")
+            file.inputStream().use { input ->
+                val buffer = ByteArray(65536)
+                while (true) {
+                    val count = input.read(buffer)
+                    if (count < 0) break
+                    md.update(buffer, 0, count)
+                }
+            }
+            return md.digest().joinToString("") { "%02x".format(it) }
+        }
+        val output = layout.buildDirectory.dir("baseline-evidence").get().asFile
+        output.deleteRecursively()
+        output.mkdirs()
+        listOf("issuer", "wallet", "verifier").forEach { service ->
+            val target = project(":waltid-services:waltid-$service-api2")
+            val runtimeDir = output.resolve("runtime/$service").apply { mkdirs() }
+            val artifacts = target.configurations.getByName("runtimeClasspath").incoming.artifacts.artifacts
+                .sortedBy { it.id.displayName }.map { artifact ->
+                    val hash = digest(artifact.file)
+                    artifact.file.copyTo(runtimeDir.resolve("$hash-${artifact.file.name}"), overwrite = true)
+                    mapOf("component" to artifact.id.componentIdentifier.displayName,
+                        "file" to artifact.file.name, "sha256" to hash)
+                }
+            val fatJars = target.tasks.named("buildFatJar").get().outputs.files.files
+                .filter { it.isFile && it.extension == "jar" }.map { file ->
+                    val destination = output.resolve("fat-jars/$service.jar")
+                    destination.parentFile.mkdirs()
+                    file.copyTo(destination, overwrite = true)
+                    mapOf("file" to "$service.jar", "sha256" to digest(file))
+                }
+            check(fatJars.size == 1) { "Expected exactly one $service fat JAR" }
+            val manifest = mapOf("service" to service,
+                "workflowSourceSha" to providers.environmentVariable("GITHUB_SHA").orNull,
+                "runtimeArtifacts" to artifacts, "fatJars" to fatJars)
+            output.resolve("$service-runtime.json").writeText(
+                groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(manifest)) + "\n")
+            println("BASELINE_RUNTIME_EXPORTED: $service (${artifacts.size} artifacts)")
+        }
+    }
+}

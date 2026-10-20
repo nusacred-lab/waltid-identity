@@ -19,7 +19,8 @@ python3 ci/verify-cose-source.py
  verifyCoseReplacement \
  :waltid-services:waltid-issuer-api2:buildFatJar \
  :waltid-services:waltid-wallet-api2:buildFatJar \
- :waltid-services:waltid-verifier-api2:buildFatJar
+ :waltid-services:waltid-verifier-api2:buildFatJar \
+ collectBaselineRuntimeEvidence
 
 # These existing integration tests generate fresh issuer/device keys and exercise
 # mdoc signing, issuer chains, presentation holder binding and tamper rejection.

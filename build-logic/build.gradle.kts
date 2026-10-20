@@ -22,6 +22,17 @@ configurations.configureEach {
 }
 
 dependencies {
+
+    constraints {
+        listOf("bcprov-jdk18on", "bcpkix-jdk18on", "bcutil-jdk18on").forEach { artifact ->
+            add("implementation", "org.bouncycastle:$artifact:${identityCatalog.findVersion("bouncycastle").get().requiredVersion}") {
+                because("Keep tooling on the reviewed mainline BC version; older transitive providers have Critical CVEs")
+            }
+        }
+        add("implementation", "org.bitbucket.b_c:jose4j:${identityCatalog.findVersion("jose4j-security").get().requiredVersion}") {
+            because("CVE-2024-29371: bound compressed JWE processing")
+        }
+    }
     // Share version catalog with build logic
     implementation(files(identityLibs.javaClass.superclass.protectionDomain.codeSource.location))
 
