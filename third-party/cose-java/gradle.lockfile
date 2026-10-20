@@ -1,7 +1,7 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-# To regenerate this file, run: ./gradlew :dependencies --write-locks
+# To regenerate this file, run: ./gradlew :third-party:cose-java:dependencies --write-locks
 com.github.peteroupc:datautilities:1.1.0=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
 com.github.peteroupc:numbers:1.8.2=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
 com.upokecenter:cbor:5.0.0-alpha2=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath

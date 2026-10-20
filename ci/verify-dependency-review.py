@@ -45,6 +45,16 @@ for entry in ledger["artifacts"]:
         require(source.path.startswith("/JetBrains/kotlin/releases/"), "Runtime evidence invariant failed")
     reviewed[key] = entry["sha256"]
 require(reviewed == expected, "Every metadata hash must have an exact review entry")
+declared_locks = set(ledger["lockfiles"])
+require("build-logic/gradle.lockfile" in declared_locks, "Build tooling lockfile must be reviewed")
+for service in ("issuer", "wallet", "verifier"):
+    require(f"waltid-services/waltid-{service}-api2/gradle.lockfile" in declared_locks,
+            "Every API2 lockfile must be reviewed")
+# Match the controlled source tree, not untracked build/cache outputs.
+import subprocess
+tracked = subprocess.check_output(["git", "-C", str(root), "ls-files"], text=True).splitlines()
+actual_locks = {name for name in tracked if Path(name).name in {"gradle.lockfile", "buildscript-gradle.lockfile"}}
+require(actual_locks == declared_locks, "Tracked lockfile inventory changed without review")
 for name, expected_hash in ledger["lockfiles"].items():
     path = Path(name)
     require(not path.is_absolute() and ".." not in path.parts, "Runtime evidence invariant failed")

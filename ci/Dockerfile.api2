@@ -1,0 +1,12 @@
+# Official Temurin 21 JRE / Ubuntu 24.04, reviewed linux/amd64 manifest.
+FROM docker.io/library/eclipse-temurin@sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c
+ARG SERVICE
+ARG RUNTIME_UID=10001
+ARG SOURCE_REVISION
+LABEL org.opencontainers.image.source="https://github.com/nusacred-lab/waltid-identity"
+LABEL org.opencontainers.image.revision="${SOURCE_REVISION}"
+WORKDIR /waltid-${SERVICE}-api2
+COPY ${SERVICE}.jar /app/service.jar
+USER ${RUNTIME_UID}
+ENV HOME=/tmp
+ENTRYPOINT ["java", "-jar", "/app/service.jar"]
