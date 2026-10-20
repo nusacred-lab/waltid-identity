@@ -1,4 +1,4 @@
-name: Native XCTest boot readiness control (temporary)
+name: Keychain process lifecycle control (temporary)
 
 on:
   workflow_dispatch:
@@ -9,33 +9,18 @@ permissions:
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_27.0.app/Contents/Developer
-  IOS_SIMULATOR_DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=27.0
 
 jobs:
-  native-bootstrap:
-    timeout-minutes: 60
+  keychain-lifecycle:
+    timeout-minutes: 30
     runs-on: xcode-27
-    strategy:
-      fail-fast: false
-      matrix:
-        wait-for-boot: [false, true]
     steps:
-      - name: Checkout the original failing tuple
+      - name: Checkout the failing Keychain tuple
         uses: walt-id/waltid-identity/.github/actions/checkout-repos@d689d1e773d6918cc42299b3cf9563a9ebce3ca0
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN || github.token }}
           resolved-refs: >-
-            {"unified":"1fef89185ad62339246905d88c45cbcac37341e6","identity":"d5e7b018b0eee561221c4d4b9cdadefa312eeed4","enterprise":"05450052962e805e4c85e42a4fe6432cd7c9a852","enterprise_license":"78972ba6237a00e3e867c0a74192e161128375f7"}
-      - name: Restore the original shared release framework
-        uses: actions/download-artifact@v8
-        with:
-          name: wallet-core-release-1
-          run-id: 39225700406
-          github-token: ${{ secrets.GH_ACCESS_TOKEN || github.token }}
-          path: ${{ runner.temp }}/wallet-core-artifact
-      - name: Verify the shared release framework
-        working-directory: waltid-identity
-        run: python3 .github/scripts/mobile-ci/wallet-core-artifact.py restore --artifact-dir "$RUNNER_TEMP/wallet-core-artifact"
+            {"unified":"1fef89185ad62339246905d88c45cbcac37341e6","identity":"656e059cc0fec8e9b7b4dbd55fef5089969b10ec","enterprise":"b9e7258c74c54116d5a8bfe72bf2c6d7febdffe4","enterprise_license":"78972ba6237a00e3e867c0a74192e161128375f7"}
       - name: Checkout the temporary control
         uses: actions/checkout@v6
         with:
@@ -43,32 +28,22 @@ jobs:
           path: probe-harness
       - name: Configure Gradle
         uses: ./waltid-identity/.github/actions/gradle-setup-action
-      - name: Configure the original iOS build environment
+      - name: Configure iOS builds
         uses: ./waltid-identity/.github/actions/ios-build-setup
         with:
           gradle-properties-path: waltid-identity/gradle.properties
-      - name: Stop pre-existing simulators on this isolated CI runner
-        run: xcrun simctl shutdown all
-      - name: Run the original provider prerequisite
-        run: |
-          python3 waltid-identity/.github/scripts/mobile-ci/run-ios-phase.py \
-            --output-dir "$GITHUB_WORKSPACE/native-bootstrap" provider \
-            waltid-identity/.github/scripts/mobile-ci/verify-ios-identity-document-provider.sh \
-            --project-dir waltid-identity/waltid-applications/waltid-wallet-demo-ios/iosApp \
-            --destination "$IOS_SIMULATOR_DESTINATION" --derived-data /tmp/xcode-derived \
-            --app-group group.id.walt.wallet.native --keychain-group-suffix id.walt.wallet.native.shared \
-            --app-bundle-id id.walt.wallet.native --appex-bundle-id id.walt.wallet.native.identitydocumentprovider \
-            --development-team 9BB78CFW7Y --build-setting OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED=YES
-      - name: Exercise three cold native XCTest starts
-        timeout-minutes: 40
-        env:
-          WAIT_FOR_BOOT: ${{ matrix.wait-for-boot }}
-        run: bash probe-harness/.github/scripts/mobile-ci/temporary-native-bootstrap-probe.sh
-      - name: Retain every attempt and its diagnostic result
+      - name: Observe the existing Keychain suite
+        run: python3 probe-harness/.github/scripts/mobile-ci/temporary-keychain-lifecycle-probe.py
+      - name: Retain lifecycle and actual test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: native-bootstrap-wait-${{ matrix.wait-for-boot }}
-          path: native-bootstrap/**
+          name: keychain-lifecycle
+          path: |
+            keychain-lifecycle/*.json
+            keychain-lifecycle/*.log
+            keychain-lifecycle/baseline-*/*.json
+            keychain-lifecycle/baseline-*/*.log
+            keychain-lifecycle/baseline-*/*.xml
           if-no-files-found: error
           retention-days: 7
