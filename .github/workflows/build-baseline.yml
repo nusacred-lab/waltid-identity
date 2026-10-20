@@ -17,10 +17,14 @@ jobs:
   baseline-build:
     needs: cose-tests
     name: ${{ inputs.mode && inputs.mode != 'verify' && 'bootstrap-discovery' || 'baseline-acceptance' }}
-    if: inputs.mode != 'cose-bootstrap'
+    if: ${{ always() && inputs.mode != 'cose-bootstrap' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
+      - name: Require successful COSE tests and repeatability
+        env:
+          COSE_RESULT: ${{ needs.cose-tests.result }}
+        run: test "$COSE_RESULT" = success
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false

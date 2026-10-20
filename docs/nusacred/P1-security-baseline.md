@@ -40,7 +40,7 @@ allowlist global, penghapusan riwayat atau promosi image ke produksi.
 
 | Koordinat | Versi baseline | Pemeriksaan yang masih diperlukan |
 | --- | --- | --- |
-| `org.cose:cose-java` | `1.1.1-WALT-SNAPSHOT` | Varian khusus walt.id dari Maven walt.id; asal source/build, checksum, lisensi, resolusi timestamp snapshot dan kebutuhan target harus ditelusuri. Jangan menggantinya diam-diam dengan upstream umum. |
+| `org.cose:cose-java` | `1.1.1-WALT-SNAPSHOT` | Diganti dengan project source terpatok `:third-party:cose-java`; lihat hasil perbaikan di bawah. Binary snapshot tidak diterima sebagai artefak tepercaya. |
 | `id.walt:waltid-nftkit` | `1.2311291144.0` | Alias untuk web3login; validasi apakah benar masuk dependency target. Keberadaan katalog tidak membuktikan dikemas pada tiga API2. |
 
 Penelusuran COSE pada 20 Oktober 2026 menemukan snapshot timestamp
@@ -106,12 +106,51 @@ pada baseline source ini. Audit lisensi dan teks yang benar-benar dikemas pada t
 masih diperlukan sebelum distribusi image. Tidak mengklaim notice statis sebagai
 hasil pemeriksaan seluruh dependency rilis.
 
+## Perbaikan COSE dari source
+
+Perbaikan mengganti seluruh deklarasi langsung COSE (sembilan penggunaan pada
+delapan file build) dengan `:third-party:cose-java`, serta menambahkan substitusi
+transitif agar tidak kembali ke binary `org.cose:cose-java`. Identitas lokal:
+`dev.nusacred.thirdparty:cose-java:1.1.1-fc897fa9-nusacred.1`. Semua 24 file Java
+serta LICENSE sama byte demi byte dengan manifest source terpatok; implementasi
+kriptografi upstream tidak ditulis ulang. LICENSE BSD-3-Clause dan provenance
+dikemas dalam binary serta source JAR. Notice tambahan mempertahankan atribusi.
+
+Module memakai BC `jdk18on` 1.86 sesuai hasil resolusi API2 sebelumnya; tidak
+memasukkan LTS. CBOR 5.0.0-alpha2 dipertahankan secara eksplisit. Lombok 1.18.36
+hanya untuk kompilasi/annotation processing; SLF4J API memakai katalog 2.0.20.
+Lihat [keputusan dan keterbatasan module](../../third-party/cose-java/README.md).
+
+[Discovery COSE](https://github.com/nusacred-lab/waltid-identity/actions/runs/39439984065)
+meluluskan 13 tes tanpa skip dan menghasilkan binary/source JAR yang identik pada
+dua build ulang dengan cache task dinonaktifkan. [CI PR strict](https://github.com/nusacred-lab/waltid-identity/actions/runs/39440757635)
+kemudian meluluskan job `cose-acceptance`, memakai dependency verification strict
+serta locking strict tanpa menulis checksum baru. Run keseluruhan tetap gagal
+pada gerbang baseline karena metadata global belum diterima; hasil job COSE saja
+tidak boleh dibaca sebagai G1 lulus.
+
+Review standalone mencocokkan 38 hash dari 20 komponen dengan unduhan terpisah
+Maven Central. Lock berisi 18 koordinat termasuk dependency tes. Scan Trivy 0.76.0
+mengenali 17 JAR dependency dan 18 koordinat lock (termasuk dev), tanpa temuan;
+DB diperbarui 20 Oktober 2026 07:17:35 UTC. Ini bukan audit kode kriptografi atau
+scan seluruh runtime/image. SBOM dependency terfokus berisi 17 komponen.
+
+Keterbatasan upstream yang ditemukan tes: generator Ed25519 mengisi map COSE,
+tetapi tidak menginisialisasi cached JCA key. Tes mengimpor serialized COSE key
+melalui constructor yang memvalidasi/menginisialisasi key, lalu menguji tanda
+tangan dan penolakan key lain/tamper. Bug generator langsung tidak diklaim selesai.
+
+Gerbang baseline bergantung pada hasil tes/repeatability COSE. Kegagalan job COSE
+harus membuat required baseline check gagal secara eksplisit, bukan hanya skipped.
+Workflow tetap read-only, tanpa hak registry, sign atau deploy. Metadata standalone
+hanya berlaku pada build terisolasi module; parent build tetap memerlukan review
+seluruh metadata/plugin sendiri. Temuan keamanan awal di atas tetap terbuka.
+
 ## Gerbang berikutnya
 
-1. Tetapkan perbaikan COSE yang dapat diverifikasi: bangun dari source terpatok
-   dengan dependency/POM serta lisensi yang diperiksa dan identitas artefak immutable,
-   atau gunakan artefak immutable lain yang asal source/binary-nya dapat dibuktikan.
-   Jangan mengganti dengan COSE upstream umum tanpa uji kompatibilitas.
+1. Pertahankan source COSE terpatok dan hasil kompatibilitasnya; perubahan source,
+   dependency atau hash baru memerlukan review. Jangan menerima kembali snapshot
+   tanpa verifikasi. Selesaikan bukti integrasi ke seluruh target API2.
 2. Review candidate locks/checksums serta asal seluruh artefak teresolusi dan plugin;
    ulangi build strict setelah celah SNAPSHOT ditutup.
 3. Scan JAR/image target, hasilkan SBOM hasil resolusi dan image, ukur freshness DB.
