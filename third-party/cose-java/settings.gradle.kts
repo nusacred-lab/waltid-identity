@@ -5,4 +5,4 @@ dependencyResolutionManagement {
         create("identityLibs") { from(files("../../gradle/libs.versions.toml")) }
     }
 }
-rootProject.name = "nusacred-cose-java"
+rootProject.name = "cose-java"

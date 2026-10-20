@@ -64,6 +64,18 @@ on a temporary runner; it does not approve those hashes. The standalone settings
 file deliberately uses Maven Central only. In the parent multi-project build,
 the parent's global verification metadata applies instead of the standalone file.
 
+The initial standalone metadata review on 2026-10-20 compared all 38 SHA-256 entries
+for 20 components with fresh downloads from `https://repo.maven.apache.org/maven2/`.
+This is an independent download from the same authoritative repository, not an
+independent publisher attestation. The lock covers 18 coordinates (including tests);
+the additional metadata components are parent POMs. No wildcard trust or ignored
+artifact rule is used. Maven metadata was checked for dependency and license identity.
+Trivy 0.76.0 recognized 17 downloaded dependency JARs in `rootfs` mode and 18 lock
+coordinates with development dependencies included; both scans reported zero
+vulnerabilities with database `UpdatedAt=2026-10-20T07:17:35Z`. This is dependency
+coverage for this module, not a code audit of the archived COSE implementation or
+coverage of the complete API2 runtime/image.
+
 The full baseline build also tests fresh-key mdoc issuance, issuer chains, holder
 binding and tamper rejection via three existing JVMMdocTest methods, and rebuilds
 all three API2 fat JARs. COSE acceptance does not by itself close G1.

@@ -15,6 +15,7 @@ permissions:
   contents: read
 jobs:
   baseline-build:
+    needs: cose-tests
     name: ${{ inputs.mode && inputs.mode != 'verify' && 'bootstrap-discovery' || 'baseline-acceptance' }}
     if: inputs.mode != 'cose-bootstrap'
     runs-on: ubuntu-24.04
