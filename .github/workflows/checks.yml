@@ -37,7 +37,7 @@ jobs:
       - name: Scan source dependency manifests including upstream frontends
         run: |
           mkdir -p source-evidence
-          "$RUNNER_TEMP/tools/trivy" fs --scanners vuln --format json \
+          "$RUNNER_TEMP/tools/trivy" fs --include-dev-deps --scanners vuln --format json \
             --severity HIGH,CRITICAL --exit-code 1 \
             --output source-evidence/vulnerabilities.json .
           python3 ci/check-scanner-db.py "$TRIVY_CACHE_DIR/db/metadata.json"
@@ -45,7 +45,7 @@ jobs:
         if: always()
         run: |
           mkdir -p source-evidence
-          "$RUNNER_TEMP/tools/trivy" fs --format cyclonedx \
+          "$RUNNER_TEMP/tools/trivy" fs --include-dev-deps --format cyclonedx \
             --output source-evidence/sbom.cdx.json .
           cp "$TRIVY_CACHE_DIR/db/metadata.json" source-evidence/db-metadata.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
@@ -55,9 +55,36 @@ jobs:
           path: source-evidence/
           retention-days: 7
           if-no-files-found: error
+  frontend-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [waltid-credentials, waltid-web-portal2, waltid-digital-credentials]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 ci/verify-npm-review.py
+      - name: Install reviewed package manager and native headers
+        run: |
+          python3 ci/install-npm.py "$RUNNER_TEMP/npm-tool"
+          python3 ci/install-node-headers.py "$RUNNER_TEMP/node-headers"
+      - name: Build with offline lifecycle scripts and test documentation SSR
+        env:
+          FRONTEND_APP: ${{ matrix.app }}
+        run: bash ci/test-frontends.sh "$FRONTEND_APP"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: frontend-${{ matrix.app }}-evidence
+          path: build/frontend-evidence/${{ matrix.app }}/
+          retention-days: 7
+          if-no-files-found: warn
   security:
     if: always()
-    needs: [source-controls, source-dependencies]
+    needs: [source-controls, source-dependencies, frontend-build]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
@@ -65,9 +92,11 @@ jobs:
         env:
           SOURCE_CONTROLS_RESULT: ${{ needs.source-controls.result }}
           SOURCE_DEPENDENCIES_RESULT: ${{ needs.source-dependencies.result }}
+          FRONTEND_BUILD_RESULT: ${{ needs.frontend-build.result }}
         run: |
           test "$SOURCE_CONTROLS_RESULT" = success
           test "$SOURCE_DEPENDENCIES_RESULT" = success
+          test "$FRONTEND_BUILD_RESULT" = success
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
