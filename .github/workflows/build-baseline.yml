@@ -1,5 +1,9 @@
 name: Controlled baseline build
 on:
+  pull_request:
+    branches: [codex/baseline-v1.2.0]
+  push:
+    branches: [codex/baseline-v1.2.0]
   workflow_dispatch:
     inputs:
       mode:
@@ -10,7 +14,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build:
+  baseline-acceptance:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -29,7 +33,7 @@ jobs:
           grep -Fx 'distributionSha256Sum=bafd5ce9cfaea0fbccfdc8439a1ac42fbd4cd9c89dc9a988228d8a2639a58e6c' gradle/wrapper/gradle-wrapper.properties
       - name: Build three API2 services (no publishing)
         env:
-          BUILD_MODE: ${{ inputs.mode }}
+          BUILD_MODE: ${{ inputs.mode || 'verify' }}
           GRADLE_USER_HOME: ${{ runner.temp }}/gradle-home
         run: bash ci/build-baseline.sh "$BUILD_MODE"
       - name: Collect candidate metadata, never promote it automatically
@@ -37,7 +41,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p candidate-metadata
-          find . -type f \( -name gradle.lockfile -o -name buildscript-gradle.lockfile -o -name verification-metadata.xml \) -not -path './.git/*' -exec cp --parents '{}' candidate-metadata/ \;
+          find . -type f \( -name gradle.lockfile -o -name buildscript-gradle.lockfile -o -name verification-metadata.xml \) -not -path './.git/*' -not -path './candidate-metadata/*' -exec cp --parents '{}' candidate-metadata/ \;
           git rev-parse HEAD > candidate-metadata/source-commit.txt
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
