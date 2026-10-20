@@ -1,0 +1,12 @@
+import org.gradle.api.artifacts.dsl.LockMode
+allprojects {
+    dependencyLocking {
+        lockAllConfigurations()
+        lockMode = findProperty('p1Bootstrap') == 'true' ? LockMode.DEFAULT : LockMode.STRICT
+    }
+    buildscript {
+        configurations.classpath {
+            resolutionStrategy.activateDependencyLocking()
+        }
+    }
+}

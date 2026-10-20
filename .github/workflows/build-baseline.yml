@@ -1,0 +1,48 @@
+name: Controlled baseline build
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Bootstrap only collects untrusted candidate lock/hash metadata; verify enforces reviewed metadata
+        type: choice
+        options: [verify, bootstrap]
+        default: verify
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+      - name: Verify Gradle wrapper independently pinned to upstream checksums
+        run: |
+          echo '238e777fcddd7e34f9708186085def2abd6e08e658505b38718d79d74c21abd5  gradle/wrapper/gradle-wrapper.jar' | sha256sum -c -
+          grep -Fx 'distributionSha256Sum=bafd5ce9cfaea0fbccfdc8439a1ac42fbd4cd9c89dc9a988228d8a2639a58e6c' gradle/wrapper/gradle-wrapper.properties
+      - name: Build three API2 services (no publishing)
+        env:
+          BUILD_MODE: ${{ inputs.mode }}
+          GRADLE_USER_HOME: ${{ runner.temp }}/gradle-home
+        run: bash ci/build-baseline.sh "$BUILD_MODE"
+      - name: Collect candidate metadata, never promote it automatically
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p candidate-metadata
+          find . -type f \( -name gradle.lockfile -o -name buildscript-gradle.lockfile -o -name verification-metadata.xml \) -not -path './.git/*' -exec cp --parents '{}' candidate-metadata/ \;
+          git rev-parse HEAD > candidate-metadata/source-commit.txt
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: unreviewed-candidate-metadata
+          path: candidate-metadata/
+          retention-days: 7
+          if-no-files-found: error
