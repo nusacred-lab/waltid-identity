@@ -14,7 +14,8 @@ on:
 permissions:
   contents: read
 jobs:
-  baseline-acceptance:
+  baseline-build:
+    name: ${{ inputs.mode == 'bootstrap' && 'bootstrap-discovery' || 'baseline-acceptance' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
