@@ -1,5 +1,37 @@
 import org.gradle.api.artifacts.dsl.LockMode
+
+// Patch vulnerable compile/tooling graphs as well as the independently aligned
+// API2 runtime BOMs. Preserve each observed minor family; never lower a version.
+def securityPatchPolicy = { details ->
+    def requested = details.requested
+    def version = requested.version ?: ''
+    def match = version =~ /^(\d+\.\d+)\.(\d+)(\.Final)?$/
+    if (!match.matches()) return
+    def family = match.group(1)
+    def installedPatch = match.group(2).toInteger()
+    def target = null
+    if (requested.group == 'io.netty' && version.endsWith('.Final')) {
+        target = ['4.1': '4.1.138.Final', '4.2': '4.2.18.Final'][family]
+    } else if (requested.group == 'com.fasterxml.jackson' || requested.group.startsWith('com.fasterxml.jackson.')) {
+        target = ['2.18': '2.18.11', '2.21': '2.21.7', '2.22': '2.22.3'][family]
+    } else if (requested.group == 'tools.jackson' || requested.group.startsWith('tools.jackson.')) {
+        target = ['3.1': '3.1.7', '3.2': '3.2.3'][family]
+    }
+    if (target && installedPatch < target.split('\\.')[2].toInteger()) {
+        details.useVersion(target)
+        details.because('Security patch within the existing dependency family; strict hashes remain required')
+    }
+}
+
 allprojects {
+    // API2 graphs retain their service-specific enforced BOMs, preventing a
+    // transitive 4.1 request from undoing the wallet/verifier 4.2 alignment.
+    if (!(name in ['waltid-issuer-api2', 'waltid-wallet-api2', 'waltid-verifier-api2'])) {
+        configurations.configureEach {
+            resolutionStrategy.eachDependency(securityPatchPolicy)
+        }
+    }
+    buildscript.configurations.classpath.resolutionStrategy.eachDependency(securityPatchPolicy)
     dependencyLocking {
         lockAllConfigurations()
         lockMode = findProperty('p1Bootstrap') == 'true' ? LockMode.DEFAULT : LockMode.STRICT
