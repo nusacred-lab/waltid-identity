@@ -1,30 +1,36 @@
-# Pemeriksaan keamanan awal P1
+# Initial P1 Security Assessment
 
-Tanggal awal: 20 Oktober 2026. Status G1 kini mengikuti required checks dan [kebijakan demo terisolasi](../../ci/DEMO-SUPPLY-CHAIN.md); bagian sebelumnya mencatat hasil historis. Baseline upstream v1.2.0,
-`ef516ecec4c79fd9fba6f1e8b226b52a4e8cf790`. Tidak ada pengecualian massal,
-allowlist global, penghapusan riwayat atau promosi image ke produksi.
+Initial date: 20 October 2026. Current G1 status follows the required checks and
+[isolated demo policy](../../ci/DEMO-SUPPLY-CHAIN.md); earlier sections record
+historical results. Upstream baseline: v1.2.0,
+`ef516ecec4c79fd9fba6f1e8b226b52a4e8cf790`. No blanket exceptions, global
+allowlists, history deletion, or production image promotion are permitted.
 
-## Cakupan dan hasil
+## Scope and results
 
-- Gitleaks 8.30.1 pada riwayat Git upstream lengkap: 2.282 temuan pada 388 path.
-  Belum semua ditinjau; fixture harus dikonfirmasi per temuan sebelum pengecualian.
-  Jangan menafsirkan jumlah ini sebagai jumlah credential aktif yang terbukti bocor.
-- Semua 10 blob baru pada bootstrap `d7342909117e44a99ed4f9ecfa324eccc2b08083`
-  diperiksa terpisah: 0 temuan. Blob lainnya identik dengan baseline upstream publik.
-  Ini membolehkan publikasi perubahan non-secret, tidak meluluskan scan baseline.
-- Trivy 0.76.0 source SCA: 8 target, 11 temuan High, 0 Critical pada manifest yang
-  terdeteksi. Temuan di bawah berada pada dua aplikasi frontend upstream yang bukan
-  target image issuer2/wallet2/verifier2. Tetap dicatat dan tidak di-ignore.
-- Source CycloneDX SBOM: 239 komponen. **Belum mencakup hasil resolusi Gradle/JAR
-  atau paket OS image kandidat**; jumlah komponen ini tidak membuktikan cakupan JVM.
-- Laporan lengkap yang mungkin memuat token/key tetap privat. Dokumen ini hanya
-  memuat ringkasan dan metadata paket publik.
+- Gitleaks 8.30.1 over the complete upstream Git history: 2,282 findings across
+  388 paths. Review was incomplete; fixture status requires confirmation for
+  each finding before an exception. This count does not establish how many
+  active credentials were exposed.
+- All 10 new blobs in bootstrap `d7342909117e44a99ed4f9ecfa324eccc2b08083`
+  were checked separately: zero findings. Other blobs were identical to the
+  public upstream baseline. This allowed publication of changes without secrets;
+  it did not pass the baseline scan.
+- Trivy 0.76.0 source SCA: eight targets, 11 High and zero Critical findings in
+  detected manifests. The findings below concern two upstream frontend
+  applications, outside the issuer2/wallet2/verifier2 target images. They remain
+  recorded and are not ignored.
+- Source CycloneDX SBOM: 239 components. **Resolved Gradle/JAR dependencies and
+  candidate-image OS packages were not covered.** This count does not establish
+  JVM coverage.
+- Full reports that might contain tokens or keys remain private. This document
+  contains only summaries and public package metadata.
 
-## Temuan source SCA
+## Source SCA findings
 
-| Target | Paket | Versi | Temuan | Severity | Perbaikan menurut database scanner |
+| Target | Package | Version | Finding | Severity | Fix reported by scanner database |
 | --- | --- | --- | --- | --- | --- |
-| `waltid-applications/waltid-credentials/package-lock.json` | `node-forge` | 1.4.0 | CVE-2026-85393 | HIGH | Belum tersedia pada hasil scan |
+| `waltid-applications/waltid-credentials/package-lock.json` | `node-forge` | 1.4.0 | CVE-2026-85393 | HIGH | Unavailable in scan results |
 | `waltid-applications/waltid-credentials/package-lock.json` | `sharp` | 0.32.6 | GHSA-f88m-g3jw-g9cj | HIGH | 0.35.0 |
 | `waltid-applications/waltid-credentials/package-lock.json` | `sharp` | 0.32.6 | GHSA-rgj7-g3m4-5g8c | HIGH | 0.35.4 |
 | `waltid-applications/waltid-credentials/package-lock.json` | `sharp` | 0.32.6 | GHSA-wq5f-xc86-pv6w | HIGH | 0.35.5 |
@@ -36,260 +42,270 @@ allowlist global, penghapusan riwayat atau promosi image ke produksi.
 | `waltid-applications/waltid-web-portal2/package-lock.json` | `postcss` | 8.5.15 | CVE-2026-73646 | HIGH | 8.5.18 |
 | `waltid-applications/waltid-web-portal2/package-lock.json` | `source-map-js` | 1.2.1 | CVE-2026-93749 | HIGH | 1.2.2 |
 
-## Artefak khusus dan integritas build
+## Custom artifacts and build integrity
 
-| Koordinat | Versi baseline | Pemeriksaan yang masih diperlukan |
+| Coordinates | Baseline version | Remaining checks at this stage |
 | --- | --- | --- |
-| `org.cose:cose-java` | `1.1.1-WALT-SNAPSHOT` | Diganti dengan project source terpatok `:third-party:cose-java`; lihat hasil perbaikan di bawah. Binary snapshot tidak diterima sebagai artefak tepercaya. |
-| `id.walt:waltid-nftkit` | `1.2311291144.0` | Alias untuk web3login; validasi apakah benar masuk dependency target. Keberadaan katalog tidak membuktikan dikemas pada tiga API2. |
+| `org.cose:cose-java` | `1.1.1-WALT-SNAPSHOT` | Replaced by pinned source project `:third-party:cose-java`; see remediation below. The snapshot binary is not accepted as trusted. |
+| `id.walt:waltid-nftkit` | `1.2311291144.0` | Alias for web3login; establish whether it enters target dependencies. Catalog presence does not prove inclusion in the three API2 services. |
 
-Penelusuran COSE pada 20 Oktober 2026 menemukan snapshot timestamp
-`1.1.1-WALT-20250317.122639-2`, dipublikasikan dari
+COSE investigation on 20 October 2026 identified timestamped snapshot
+`1.1.1-WALT-20250317.122639-2`, published at
 `https://maven.waltid.dev/snapshots/org/cose/cose-java/1.1.1-WALT-SNAPSHOT/`.
-Binary berisi `git.properties` dengan commit
-`fc897fa9da31f35c5f2e3e092496ad1c57e10457` dan **`git.dirty=true`**.
-Seluruh 24 file Java source JAR cocok dengan source commit pada repo
+The binary contains `git.properties` with commit
+`fc897fa9da31f35c5f2e3e092496ad1c57e10457` and **`git.dirty=true`**.
+All 24 Java files in the source JAR matched that source commit in
 [walt-id/cose-java](https://github.com/walt-id/cose-java/tree/fc897fa9da31f35c5f2e3e092496ad1c57e10457)
-setelah normalisasi akhir baris, tanpa path hilang. Repo tersebut kini archived.
+after line-ending normalization, with no missing paths. That repository is now
+archived.
 
-POM yang dipublikasikan berbeda dari POM commit yang diklaim: BouncyCastle
-`bcprov-jdk18on`/`bcpkix-jdk18on` versi `1.80` diganti dengan
-`bcprov-lts8on`/`bcpkix-lts8on` versi `2.73.7`. Binary dan source JAR tidak
-memuat LICENSE/NOTICE; teks LICENSE tersedia pada commit source. Kecocokan source
-belum membuktikan binary dibangun hanya dari source tersebut. Asal perubahan POM,
-dependency LTS, verifikasi binary/source dan pengemasan lisensi masih harus ditangani.
+The published POM differs from the claimed commit's POM: BouncyCastle
+`bcprov-jdk18on`/`bcpkix-jdk18on` 1.80 was replaced by
+`bcprov-lts8on`/`bcpkix-lts8on` 2.73.7. Neither binary nor source JAR contains
+LICENSE/NOTICE; the source commit contains LICENSE. Source agreement does not
+prove that the binary was built exclusively from that source. POM provenance,
+LTS dependencies, binary/source verification, and license packaging still
+required resolution at this stage.
 
-SHA-256 hasil unduhan untuk penelusuran (belum menjadi checksum yang diterima
-pada verification metadata rilis):
+Downloaded SHA-256 values from the investigation (not yet accepted release
+verification metadata):
 
-| Artefak snapshot timestamp | SHA-256 |
+| Timestamped snapshot artifact | SHA-256 |
 | --- | --- |
 | Binary JAR | `f69dbdabcf8ead0b78d6d36098538f0febbfa38b07114b1965816741b671419e` |
 | Source JAR | `8fc17a7c02b21a2d5326853986840ad098dfc51a53b21a5f1468c001685142a3` |
 | POM | `3638b3a4df74a42dc455204a657c7b96af759650cabfc49009bf5fa5e8de2654` |
 
-Referensi langsung `identityLibs.java.cose` ditemukan pada modul mdoc-credentials
-yang digunakan issuer2; ini memerlukan pemeriksaan dependency target nyata.
-`id.walt:waltid-nftkit` ditemukan pada web3login-microservice, bukan bukti masuk
-classpath tiga API2. Hasil resolusi build tetap menjadi penentu akhirnya.
+A direct `identityLibs.java.cose` reference was found in mdoc-credentials, used
+by issuer2; the actual target dependencies therefore required inspection.
+`id.walt:waltid-nftkit` was found in web3login-microservice, which does not prove
+inclusion in the three API2 classpaths. Resolved build results are authoritative.
 
-Repository deklaratif: Maven Central, Google, Gradle Plugin Portal,
-`https://maven.waltid.dev/releases` dan `https://maven.waltid.dev/snapshots`.
-Belum ada lock/verification metadata yang diterima untuk dependency target maupun
-build-logic. [Bootstrap terisolasi](https://github.com/nusacred-lab/waltid-identity/actions/runs/39398624224)
-pada commit `81268c0739156071a2c61626a247ed4ae748fc4a` berhasil membangun
-ketiga fat JAR API2 dalam 15 menit 1 detik. Ini belum build atau uji image.
-Artefak `12253803181` menghasilkan 156 lockfile dan verification metadata dengan
-1.866 komponen serta 3.402 entri SHA-256. Seluruhnya masih kandidat yang belum diterima.
+Declared repositories: Maven Central, Google, Gradle Plugin Portal,
+`https://maven.waltid.dev/releases`, and `https://maven.waltid.dev/snapshots`.
+At this stage no lock/verification metadata had been accepted for target or
+build-logic dependencies. The [isolated bootstrap](https://github.com/nusacred-lab/waltid-identity/actions/runs/39398624224)
+at `81268c0739156071a2c61626a247ed4ae748fc4a` built all three API2 fat JARs in
+15 minutes 1 second. It did not build or test images. Artifact `12253803181`
+contained 156 lockfiles and verification metadata with 1,866 components and
+3,402 SHA-256 entries, all still unaccepted candidates.
 
-Review menunjukkan COSE snapshot tercatat pada lockfile ketiga API2 dan 33 lockfile
-secara keseluruhan, tetapi tidak ada komponen `org.cose` pada verification metadata.
-Ini sesuai keterbatasan [dependency verification Gradle](https://docs.gradle.org/current/userguide/dependency_verification.html)
-untuk changing/SNAPSHOT dependency. Build 9.8.0 juga memberi peringatan bahwa
-locking snapshot tidak membekukan isi artefak. Mode strict tidak boleh diklaim
-melindungi artefak tersebut hanya karena metadata checksum lain sudah tersedia.
+Review found the COSE snapshot in all three API2 lockfiles and 33 lockfiles in
+total, but no `org.cose` component in verification metadata. This matches the
+[Gradle dependency verification limitation](https://docs.gradle.org/current/userguide/dependency_verification.html)
+for changing/SNAPSHOT dependencies. Gradle 9.8.0 also warned that snapshot locking
+does not freeze artifact contents. Strict mode cannot be claimed to protect that
+artifact simply because other checksum metadata is present.
 
-`ci/build-baseline.sh bootstrap` hanya mengumpulkan kandidat metadata;
-`verify` menolak metadata yang belum tersedia dan memakai verifikasi strict.
-Jangan menjalankan write-metadata pada jalur rilis untuk menerima checksum baru.
+`ci/build-baseline.sh bootstrap` only collects candidate metadata; `verify`
+rejects missing metadata and uses strict verification. Never run write-metadata
+on the release path to accept new checksums.
 
-Wrapper JAR diperiksa terhadap checksum resmi:
+The wrapper JAR matched its official checksum:
 `238e777fcddd7e34f9708186085def2abd6e08e658505b38718d79d74c21abd5`.
-Distribusi Gradle 9.8.0 menggunakan SHA-256:
+The Gradle 9.8.0 distribution uses SHA-256:
 `bafd5ce9cfaea0fbccfdc8439a1ac42fbd4cd9c89dc9a988228d8a2639a58e6c`.
-Sumber checksum: https://services.gradle.org/distributions/gradle-9.8.0-wrapper.jar.sha256
-serta https://services.gradle.org/distributions/gradle-9.8.0-bin.zip.sha256.
+Checksum sources: https://services.gradle.org/distributions/gradle-9.8.0-wrapper.jar.sha256
+and https://services.gradle.org/distributions/gradle-9.8.0-bin.zip.sha256.
 
-LICENSE, NOTICE.md dan THIRD-PARTY-NOTICE.md upstream dipertahankan. Notice menyebut
-867 komponen dan teks lisensi pada `LICENSES/`, tetapi direktori tersebut tidak ada
-pada baseline source ini. Audit lisensi dan teks yang benar-benar dikemas pada target
-masih diperlukan sebelum distribusi image. Tidak mengklaim notice statis sebagai
-hasil pemeriksaan seluruh dependency rilis.
+Upstream LICENSE, NOTICE.md, and THIRD-PARTY-NOTICE.md are retained. The notice
+lists 867 components and license texts under `LICENSES/`, but that directory is
+absent from this source baseline. Target license auditing and packaged texts
+still required checking before image distribution. Static notices do not
+establish review of every release dependency.
 
-## Perbaikan COSE dari source
+## Building COSE from source
 
-Perbaikan mengganti seluruh deklarasi langsung COSE (sembilan penggunaan pada
-delapan file build) dengan `:third-party:cose-java`, serta menambahkan substitusi
-transitif agar tidak kembali ke binary `org.cose:cose-java`. Identitas lokal:
-`dev.nusacred.thirdparty:cose-java:1.1.1-fc897fa9-nusacred.1`. Semua 24 file Java
-serta LICENSE sama byte demi byte dengan manifest source terpatok; implementasi
-kriptografi upstream tidak ditulis ulang. LICENSE BSD-3-Clause dan provenance
-dikemas dalam binary serta source JAR. Notice tambahan mempertahankan atribusi.
+Remediation replaced all direct COSE declarations (nine usages in eight build
+files) with `:third-party:cose-java`, and added transitive substitution to prevent
+fallback to the external `org.cose:cose-java` binary. Local identity:
+`dev.nusacred.thirdparty:cose-java:1.1.1-fc897fa9-nusacred.1`. All 24 Java files
+and LICENSE match the pinned source manifest byte for byte; upstream cryptographic
+implementation was not rewritten. BSD-3-Clause LICENSE and provenance are
+packaged in binary and source JARs. Additional notices retain attribution.
 
-Module memakai BC `jdk18on` 1.86 sesuai hasil resolusi API2 sebelumnya; tidak
-memasukkan LTS. CBOR 5.0.0-alpha2 dipertahankan secara eksplisit. Lombok 1.18.36
-hanya untuk kompilasi/annotation processing; SLF4J API memakai katalog 2.0.20.
-Lihat [keputusan dan keterbatasan module](../../third-party/cose-java/README.md).
+The module uses BC `jdk18on` 1.86, consistent with prior API2 resolution, without
+LTS. CBOR 5.0.0-alpha2 is retained explicitly. Lombok 1.18.36 is compile/annotation
+processing only; SLF4J API uses catalog version 2.0.20. See
+[module decisions and limitations](../../third-party/cose-java/README.md).
 
-[Discovery COSE](https://github.com/nusacred-lab/waltid-identity/actions/runs/39439984065)
-meluluskan 13 tes tanpa skip dan menghasilkan binary/source JAR yang identik pada
-dua build ulang dengan cache task dinonaktifkan. [CI PR strict](https://github.com/nusacred-lab/waltid-identity/actions/runs/39441236360/job/118691321626)
-kemudian meluluskan job `cose-acceptance`, memakai dependency verification strict
-serta locking strict tanpa menulis checksum baru. Run keseluruhan tetap gagal
-pada gerbang baseline karena metadata global belum diterima; hasil job COSE saja
-tidak boleh dibaca sebagai G1 lulus.
+[COSE discovery](https://github.com/nusacred-lab/waltid-identity/actions/runs/39439984065)
+passed 13 tests without skips and produced identical binary/source JARs across
+two rebuilds with task caching disabled. [Strict PR CI](https://github.com/nusacred-lab/waltid-identity/actions/runs/39441236360/job/118691321626)
+then passed `cose-acceptance`, using strict dependency verification and locking
+without writing new checksums. The overall run still failed the baseline gate
+because global metadata had not been accepted. The COSE job alone did not pass G1.
 
-Review standalone mencocokkan 38 hash dari 20 komponen dengan unduhan terpisah
-Maven Central. Lock berisi 18 koordinat termasuk dependency tes. Scan Trivy 0.76.0
-mengenali 17 JAR dependency dan 18 koordinat lock (termasuk dev), tanpa temuan;
-DB diperbarui 20 Oktober 2026 07:17:35 UTC. Ini bukan audit kode kriptografi atau
-scan seluruh runtime/image. SBOM dependency terfokus berisi 17 komponen.
+Standalone review matched 38 hashes from 20 components against separate Maven
+Central downloads. The lock contains 18 coordinates including test dependencies.
+Trivy 0.76.0 recognized 17 dependency JARs and 18 lock coordinates, including dev,
+with no findings; database update: 20 October 2026 07:17:35 UTC. This is neither a
+cryptographic code audit nor a full runtime/image scan. The focused dependency
+SBOM contains 17 components.
 
-Keterbatasan upstream yang ditemukan tes: generator Ed25519 mengisi map COSE,
-tetapi tidak menginisialisasi cached JCA key. Tes mengimpor serialized COSE key
-melalui constructor yang memvalidasi/menginisialisasi key, lalu menguji tanda
-tangan dan penolakan key lain/tamper. Bug generator langsung tidak diklaim selesai.
+Tests exposed an upstream limitation: the Ed25519 generator populates the COSE
+map but does not initialize its cached JCA key. Tests import a serialized COSE key
+through the validating/initializing constructor, then test signatures and
+rejection of another key or tampered content. The direct generator bug is not
+claimed to be fixed.
 
-[Integrasi source COSE](https://github.com/nusacred-lab/waltid-identity/actions/runs/39440113754)
-pada commit `78cb982f0181c997721846666c2331725d35dbaf` berhasil, durasi job
-15 menit 43 detik. Ketiga fat JAR API2 dibangun, `verifyCoseReplacement`
-meluluskan graph issuer/wallet/verifier tanpa binary COSE eksternal atau BC LTS,
-dan tiga skenario fresh-key JVMMdocTest lulus (issuer, intermediate issuer, serta
-intermediate issuer pada x5chain). Skenario itu mencakup issuance, content tamper
-rejection dan presentasi dengan tanda tangan perangkat. Ini bukan uji HTTP atau
-harness credential pada image. Metadata global hasil bootstrap tetap kandidat;
-keberhasilan bootstrap tidak menggantikan gerbang strict. Perubahan setelah run
-ini hanya menyentuh metadata/settings standalone, gerbang CI, pemeriksa manifest
-dan dokumentasi; source produksi serta dependency parent build tetap sama.
+[COSE source integration](https://github.com/nusacred-lab/waltid-identity/actions/runs/39440113754)
+at `78cb982f0181c997721846666c2331725d35dbaf` succeeded in 15 minutes 43 seconds.
+All three API2 fat JARs built; `verifyCoseReplacement` passed issuer/wallet/verifier
+graph checks without external COSE binaries or BC LTS. Three fresh-key
+JVMMdocTest scenarios passed: issuer, intermediate issuer, and intermediate issuer
+in x5chain. These cover issuance, tampered-content rejection, and device-signed
+presentation. They do not test HTTP or the image credential harness. Global
+bootstrap metadata remained candidate material; bootstrap success does not replace
+the strict gate. Subsequent changes only affected standalone metadata/settings,
+CI gates, manifest checking, and documentation; production source and parent-build
+dependencies remained the same.
 
-Gerbang baseline bergantung pada hasil tes/repeatability COSE. Kegagalan job COSE
-harus membuat required baseline check gagal secara eksplisit, bukan hanya skipped.
-Workflow tetap read-only, tanpa hak registry, sign atau deploy. Metadata standalone
-hanya berlaku pada build terisolasi module; parent build tetap memerlukan review
-seluruh metadata/plugin sendiri. Temuan keamanan awal di atas tetap terbuka.
+The baseline gate depends on COSE test/repeatability results. A COSE job failure
+must explicitly fail the required baseline check rather than leave it skipped.
+Workflows remain read-only, without registry, signing, or deployment privileges.
+Standalone metadata applies only to the isolated module build; the parent build
+requires separate review of all its metadata/plugins. Initial findings above
+remained open at this stage.
 
-## Review global dan actual runtime — kelanjutan G1
+## Global review and actual runtime — G1 continuation
 
 [Discovery 39449623992](https://github.com/nusacred-lab/waltid-identity/actions/runs/39449623992)
-pada `784162061f2b4a42c48c1423cf303afb93f0ea45` lulus build tiga API2,
-graph guard COSE, tes mdoc, atribusi fat JAR, dan scan actual runtime melalui
-graph hasil resolusi maupun JAR langsung. Keduanya melaporkan **nol High/Critical**
-untuk masing-masing issuer, wallet dan verifier. SBOM graph berisi masing-masing
-340, 405 dan 306 artefak, dicocokkan dengan SHA-256 setiap JAR. SBOM tidak
-mengklaim menyimpan seluruh edge dependency transitif; daftar root mencakup
-seluruh artefak runtime. Ini belum scan image atau bukti alur HTTP pada image.
+at `784162061f2b4a42c48c1423cf303afb93f0ea45` passed three API2 builds, the COSE
+graph guard, mdoc tests, fat JAR attribution, and actual-runtime scans through
+both resolved graphs and direct JAR inspection. Both reported **zero
+High/Critical** for issuer, wallet, and verifier. Graph SBOMs contain 340, 405,
+and 306 artifacts respectively, matched against each JAR's SHA-256. The SBOM does
+not claim every transitive dependency edge; its root list covers all runtime
+artifacts. This did not yet establish image scans or image HTTP flows.
 
-Metadata global **1.872 komponen/3.431 hash** dan **159 lockfile** diterima
-setelah review terpisah. Dari kandidat awal 3.398 hash: 1.626 cocok dengan
-checksum repository resmi, 1.336 dengan hashing unduhan resmi, 383 dengan
-pemetaan `.module` resmi lalu hashing unduhan, 52 dengan artefak custom publisher,
-dan satu archive Kotlin/Native dengan digest aset release resmi JetBrains.
-Sebanyak 65 hash tambahan diperiksa setelah perbaikan dependency; sebagian
-menggantikan hash versi lama, sehingga jumlah final bukan 3.398 + 65.
+Global metadata with **1,872 components/3,431 hashes** and **159 lockfiles** was
+accepted after separate review. Of the initial 3,398 candidate hashes, 1,626
+matched official repository checksums, 1,336 matched independently hashed official
+downloads, 383 matched official `.module` mappings followed by download hashing,
+52 matched custom publisher artifacts, and one Kotlin/Native archive matched the
+official JetBrains release asset digest. Another 65 hashes were checked after
+dependency remediation; some replaced earlier versions, so the final count is not
+3,398 + 65.
 
-Custom serialization `1.11.1-waltid-20260811` ditelusuri ke
+Custom serialization `1.11.1-waltid-20260811` was traced to
 [source fork `4fe61aca0dd185b0cdb920a050df81dab121cae9`](https://github.com/walt-id/kotlinx.serialization/tree/4fe61aca0dd185b0cdb920a050df81dab121cae9).
-Sebanyak 946 perbandingan file kode dari source JAR lintas target cocok setelah
-normalisasi akhir baris (common source berulang, bukan 946 file unik). Lisensi
-dan fork notice dipertahankan persis pada `ci/licenses/kotlinx-serialization`
-dan diperiksa dalam fat JAR. Tidak ditemukan attestation atau reproduksi binary;
-review ini tidak mengklaim keduanya. Perilaku CBOR khusus fork dipertahankan.
-Repository snapshot dihapus; repository release walt.id dibatasi pada versi
-serialization itu dan koordinat NFTKit legacy spesifik, bukan mirror umum.
+All 946 source-JAR code-file comparisons across targets matched after line-ending
+normalization (common source repeats; these are not 946 unique files). License
+and fork notices are retained exactly in `ci/licenses/kotlinx-serialization`
+and checked in fat JARs. Neither attestation nor binary reproduction was found;
+neither is claimed. Fork-specific CBOR behavior is retained. The snapshot
+repository was removed. The walt.id release repository is limited to that
+serialization version and specific legacy NFTKit coordinates, rather than acting
+as a general mirror.
 
-Runtime diperbaiki dengan Netty 4.1.138 pada issuer serta 4.2.18 pada
-wallet/verifier, Jackson 2.22.3/3.2.3, json-smart 2.5.2 dan PG JDBC 42.7.14.
-BC tooling 1.86 dan jose4j 0.9.6 juga dipatok. Semua hash harus mempunyai
-entri review persis pada `ci/dependency-review.json`; XML, isi lock dan inventaris
-lock yang berubah tanpa review ditolak. Jalur acceptance menjalankan Gradle
-strict, tanpa write-metadata atau auto-promotion dari bootstrap.
+Runtime remediation uses Netty 4.1.138 for issuer and 4.2.18 for wallet/verifier,
+Jackson 2.22.3/3.2.3, json-smart 2.5.2, and PG JDBC 42.7.14. BC tooling 1.86 and
+jose4j 0.9.6 are also pinned. Every hash requires an exact review entry in
+`ci/dependency-review.json`; unreviewed XML, lock-content, or lock-inventory changes
+are rejected. Acceptance runs Gradle strict without write-metadata or automatic
+promotion from bootstrap.
 
-[Discovery sebelumnya 39445432407](https://github.com/nusacred-lab/waltid-identity/actions/runs/39445432407)
-tetap **gagal**: collector salah membaca output lifecycle `buildFatJar`.
-Collector kini membaca archive `shadowJar`; kandidat parsial tanpa seluruh lock
-dari run gagal tidak diimpor. Uji negatif menolak metadata/lock berubah, lock
-baru tanpa review, runtime JAR berubah, serta fat JAR tanpa atribusi.
+[Earlier discovery 39445432407](https://github.com/nusacred-lab/waltid-identity/actions/runs/39445432407)
+remains **failed**: the collector read the `buildFatJar` lifecycle output
+incorrectly. It now reads the `shadowJar` archive. Partial candidates lacking the
+full lock inventory from that failed run were not imported. Negative tests reject
+changed metadata/locks, new unreviewed locks, changed runtime JARs, and fat JARs
+without attribution.
 
-[Acceptance strict 39451595960](https://github.com/nusacred-lab/waltid-identity/actions/runs/39451595960)
-**gagal** saat readiness wallet: SQLite JDBC tidak dapat menginisialisasi native
-library pada temporary mount `noexec`. Probe terisolasi menggunakan JAR SQLite
-3.53.2.0 yang sama dan base JRE terpatok gagal pada `noexec`, lalu berhasil pada
-`exec`. Perbaikan membatasi temporary mount executable pada wallet; container
-lain tetap `noexec`, root filesystem tetap read-only dan proses tanpa root.
+[Strict acceptance 39451595960](https://github.com/nusacred-lab/waltid-identity/actions/runs/39451595960)
+**failed** at wallet readiness: SQLite JDBC could not initialize its native
+library on a `noexec` temporary mount. An isolated probe with the same SQLite
+3.53.2.0 JAR and pinned base JRE failed with `noexec` and passed with `exec`.
+The fix limits executable temporary mounts to the wallet; other containers retain
+`noexec`, root filesystems remain read-only, and processes remain non-root.
 
-[Acceptance strict 39454853516](https://github.com/nusacred-lab/waltid-identity/actions/runs/39454853516)
-pada head `60d8c522aff10ae87537a29243ddc403ce2047b3` **berhasil**: 13 tes COSE,
-tiga tes mdoc, nol gagal/error/skip, runtime/image scan nol High/Critical untuk
-ketiga layanan, serta alur HTTP issuance, penyimpanan wallet, preview,
-holder-bound presentation dan verifikasi nyata. Tidak ada image dipublikasikan.
-[Bukti terikat source dan digest](evidence/g1-api2-39454853516.json) mencatat merge
-commit yang benar-benar dibangun dan kesamaan tree dengan head PR; local image
-configuration digest dibedakan dari registry manifest digest.
+[Strict acceptance 39454853516](https://github.com/nusacred-lab/waltid-identity/actions/runs/39454853516)
+at head `60d8c522aff10ae87537a29243ddc403ce2047b3` **passed**: 13 COSE tests,
+three mdoc tests, no failures/errors/skips, zero High/Critical runtime/image
+findings for all three services, and real HTTP issuance, wallet storage, preview,
+holder-bound presentation, and verification. No images were published.
+[Source/digest evidence](evidence/g1-api2-39454853516.json) records the actual
+built merge commit and its tree equality with the PR head. Local image
+configuration digests are distinguished from registry manifest digests.
 
-## Source lengkap dan remediasi lanjutan — 20–21 Oktober 2026
+## Complete source and further remediation — 20–21 October 2026
 
-Scan awal belum memasukkan seluruh development dependencies frontend.
-`--include-dev-deps` kini diwajibkan pada source scan/SBOM. Cakupan lengkap pada
-lock awal melaporkan **213 High/15 Critical**; angka ini tidak boleh dianggap
-sebagai temuan yang dikemas pada tiga actual runtime API2.
+Initial scans omitted some frontend development dependencies. Source scans/SBOMs
+now require `--include-dev-deps`. Full initial-lock coverage reported **213
+High/15 Critical**; these counts do not describe findings packaged in the three
+actual API2 runtimes.
 
-Aturan patch pada init build memperbaiki classpath compile/plugin yang juga
-rentan, mempertahankan minor family Jackson/Netty dan tidak menurunkan versi.
-BOM service API2 tetap independen. Discovery hanya memperbarui keluarga lock yang
-ditargetkan; jalur strict tidak memakai update-locks atau write-metadata.
+Init-build patch rules remediate vulnerable compile/plugin classpaths while
+retaining Jackson/Netty minor families and avoiding downgrades. API2 service BOMs
+remain independent. Discovery only updates targeted lock families; strict runs
+use neither update-locks nor write-metadata.
 [Discovery 39459390656](https://github.com/nusacred-lab/waltid-identity/actions/runs/39459390656)
-berhasil termasuk image dan credential flow. **35 hash tambahan** diperiksa
-terpisah; metadata diterima berisi **1.894 komponen/3.466 hash dan 159 lockfile**.
-Scan seluruh kandidat lock Gradle, termasuk dev, melaporkan nol High/Critical.
+passed, including images and credential flow. **35 additional hashes** were
+reviewed separately; accepted metadata contains **1,894 components/3,466 hashes
+and 159 lockfiles**. Scanning all candidate Gradle locks, including dev, reported
+zero High/Critical.
 
-Ketiga graph frontend diperbarui dengan strict peer validation dan 1.270 arsip
-npm direview terhadap metadata registry serta byte unduhan terpisah. Bundled
-component dan perbedaan root direktori arsip DefinitelyTyped juga diperiksa.
-Npm 10 mengalami error internal; npm 11.21.1 yang integritasnya diperiksa berhasil
-melakukan resolusi strict tanpa legacy-peer-deps. Toolchain builder Node, header
-native dan npm dipatok. Script lifecycle/build berjalan tanpa jaringan setelah
-instalasi arsip tanpa script. [Rincian dan batas cakupan](../../ci/FRONTEND-BASELINE.md).
+All three frontend graphs were updated with strict peer validation; 1,270 npm
+archives were reviewed against registry metadata and separately downloaded bytes.
+Bundled components and DefinitelyTyped archive-root differences were also checked.
+Npm 10 encountered an internal error; integrity-checked npm 11.21.1 resolved
+strictly without legacy-peer-deps. Builder Node, native headers, and npm are
+pinned. Lifecycle/build scripts run offline after script-free archive installation.
+See [details and scope limits](../../ci/FRONTEND-BASELINE.md).
 
-Migrasi awal Content belum mencakup seluruh navigasi/API dan ditolak tes SSR
-pada [run 39460484815](https://github.com/nusacred-lab/waltid-identity/actions/runs/39460484815).
-Perbaikan melengkapi navigasi, surrounding pages, TOC dan endpoint JSON menggunakan
-codec AST resmi yang sudah direview. Uji HTTP lokal terisolasi pada build nyata
-kemudian meluluskan halaman root/nested, target TOC, navigasi, 404 halaman hilang,
-tiga API credential yang cocok dengan Markdown sumber dan menolak nama tak ada,
-serta API mapping/manifest pada fixture sintetis versioned. CI untuk revisi final
-wajib mengulang build frontend dan acceptance API2 sebelum perubahan diterima.
+The initial Content migration omitted some navigation/API behavior and failed SSR
+tests in [run 39460484815](https://github.com/nusacred-lab/waltid-identity/actions/runs/39460484815).
+Remediation added navigation, surrounding pages, TOC, and JSON endpoints using the
+reviewed official AST codec. Isolated local HTTP tests on actual builds then
+passed root/nested pages, TOC targets, navigation, missing-page 404s, three
+credential APIs matching source Markdown and rejecting unknown names, and
+mapping/manifest APIs against versioned synthetic fixtures. Final-revision CI
+must rerun frontend builds and API2 acceptance before changes are accepted.
 
-Scan source lengkap setelah lock hasil review diterapkan melaporkan **4 High,
-0 Critical**: `node-forge` 1.4.0 / CVE-2026-85393 dan `braces` 3.0.3 /
-CVE-2026-93687 pada dua frontend. Registry resmi belum menyediakan versi perbaikan
-saat diperiksa. Dependency review GitHub juga menolak braces. Tidak ada waiver,
-ignore atau perubahan namespace package agar scanner kehilangan temuan.
+Full source scans after reviewed locks reported **4 High, 0 Critical**:
+`node-forge` 1.4.0 / CVE-2026-85393 and `braces` 3.0.3 / CVE-2026-93687 across
+two frontends. Official registries had no fixes when checked. GitHub dependency
+review also rejected braces. No waiver, ignore, or package namespace change was
+used to hide findings from scanners.
 
-Riwayat upstream masih mempunyai 2.282 temuan, dikelompokkan secara privat menjadi
-361 nilai berbeda untuk triase. Pengelompokan bukan bukti false positive atau
-credential aktif. Tiga kelompok AWS/Azure belum mempunyai konfirmasi
-fixture/revocation. Tidak ada percobaan autentikasi atau laporan publik atas
-nilai tersebut. **G1 tetap belum lulus.**
+Upstream history still contained 2,282 findings, privately grouped into 361
+distinct values for triage. Grouping does not establish false positives or active
+credentials. Three AWS/Azure groups lacked fixture/revocation confirmation. No
+authentication attempts or public reports used these values. **G1 remained blocked
+at this stage.**
 
-### Satu temuan checksum yang terbukti non-secret
+### One checksum finding established as non-secret
 
-Revisi berikutnya menambah satu temuan generic-api-key pada checksum file hasil
-uji yang namanya memuat kata credential, sehingga hitungan mentah menjadi 2.283.
-Nilainya cocok persis dengan SHA-256 [file outcome publik yang aman](evidence/g1-api2-39454853516-outcome.json):
-hanya schema version, boolean dan status passed; tidak ada credential, key, grant
-atau session ID. Lokasi commit/line dan bukti tercatat pada
-[ledger klasifikasi](../../ci/checksum-finding-review.json).
+A subsequent revision added one generic-api-key finding in the checksum of a test
+result file whose name contains credential, raising the raw count to 2,283.
+The value exactly matches the SHA-256 of a
+[safe public outcome file](evidence/g1-api2-39454853516-outcome.json): schema
+version, booleans, and passed status only, without credentials, keys, grants, or
+session IDs. Commit/line locations and proof are recorded in the
+[classification ledger](../../ci/checksum-finding-review.json).
 
-Hanya fingerprint immutable itu masuk `.gitleaksignore`.
-`ci/verify-checksum-findings.py` memeriksa sumber pada commit asal, baris finding,
-hash byte proof dan schema outcome pada setiap CI. Ignore tambahan yang tidak
-punya bukti atau proof yang berubah ditolak. Uji negatif keduanya telah dilakukan;
-perbandingan set fingerprint memastikan hanya temuan checksum tersebut yang
-berkurang dan **2.282 temuan lain tetap menahan full-history scan**. Ini tidak
-menerapkan exception CVE atau allowlist direktori/riwayat baseline.
+Only that immutable fingerprint enters `.gitleaksignore`.
+`ci/verify-checksum-findings.py` checks the original-commit source, finding line,
+proof byte hash, and outcome schema on every CI run. Additional ignores without
+proof and changed proofs are rejected. Both negative tests were performed;
+fingerprint-set comparison confirms only that checksum finding was removed and
+**the other 2,282 findings still blocked full-history scanning**. This introduces
+neither a CVE exception nor a directory/baseline-history allowlist.
 
-## Gerbang berikutnya
+## Subsequent gates
 
-1. Pertahankan source COSE, ledger review dan hasil kompatibilitas; dependency
-   atau hash baru memerlukan review, termasuk perubahan inventaris lock.
-2. Buktikan jalur strict tanpa perubahan metadata, termasuk tes tanpa skip.
-3. Luluskan scan image dan alur credential nyata pada image yang sama; rekam
-   source/JAR/base digest serta local image configuration digest dengan jenis
-   digest yang tepat. Tidak ada publikasi registry pada workflow ini.
-4. Tangani temuan source/frontend dan riwayat inherited satu per satu. Required
-   security harus menahan kegagalan keduanya. Tidak ada pengecualian massal.
+1. Retain COSE source, review ledgers, and compatibility results. New dependencies
+   or hashes require review, including lock-inventory changes.
+2. Demonstrate the strict path without metadata changes or skipped tests.
+3. Pass image scans and real credential flows on the same images. Record
+   source/JAR/base digests and local image configuration digests with the correct
+   digest types. These workflows do not publish to registries.
+4. Address source/frontend and inherited-history findings individually. Required
+   security checks must block either failure. Blanket exceptions are prohibited.
 
-Scanner error, metadata tidak lengkap dan temuan yang belum ditangani menahan G1.
+Scanner errors, incomplete metadata, and unresolved findings block G1, subject to
+the later explicitly bounded demo decision below.
 
 ## Scope remediation — 21 October 2026
 
