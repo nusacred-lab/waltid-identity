@@ -5,6 +5,7 @@ ARG RUNTIME_UID=10001
 ARG SOURCE_REVISION
 LABEL org.opencontainers.image.source="https://github.com/nusacred-lab/waltid-identity"
 LABEL org.opencontainers.image.revision="${SOURCE_REVISION}"
+LABEL org.nusacred.scope="synthetic-isolated-demo-only"
 WORKDIR /waltid-${SERVICE}-api2
 COPY ${SERVICE}.jar /app/service.jar
 USER ${RUNTIME_UID}

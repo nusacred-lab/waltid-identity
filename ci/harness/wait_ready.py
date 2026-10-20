@@ -1,13 +1,15 @@
 """Wait for real HTTP responses without printing service bodies."""
+import os
 import time
 import urllib.error
 import urllib.request
 
-for port in (7005, 7006, 7004):
+for service, port in (("issuer", 7005), ("wallet", 7006), ("verifier", 7004)):
+    base = os.environ[service.upper() + "_URL"]
     deadline = time.monotonic() + 180
     while True:
         try:
-            with urllib.request.urlopen(f"http://127.0.0.1:{port}/", timeout=3):
+            with urllib.request.urlopen(base + "/", timeout=3):
                 break
         except urllib.error.HTTPError as error:
             # A route-level 404/401 proves the HTTP listener is serving requests.

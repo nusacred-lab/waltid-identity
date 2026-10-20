@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "G1-DEMO-HISTORY-20261021",
+  "owner": "Nusacred demo maintainer",
+  "authorization": "User instruction on 2026-10-21: demo project; handle open-source supply-chain risks without external reporting.",
+  "scope": "synthetic-isolated-demo-only",
+  "expiresAt": "2026-11-20T17:00:00Z",
+  "productionAllowed": false,
+  "newFindingsAllowed": 0,
+  "inventorySha256": "af27df8123fd8a19ea60cd3a1434ae8f464e74df38b0863e269fe6151d73e2fa",
+  "mitigations": [
+    "Fresh issuer/token/holder keys; no upstream credential trusted",
+    "Internal Docker bridge, disabled external DNS forwarding, no host ports",
+    "Non-root read-only containers and disposable storage",
+    "Pinned/reviewed dependency inputs and real runtime/image scans",
+    "Read-only ephemeral CI with no registry/sign/deploy permissions"
+  ],
+  "unknownCredentialValidity": "not-established; no revocation or non-secret claim",
+  "reportingRequested": false
+}

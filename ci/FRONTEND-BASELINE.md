@@ -51,5 +51,7 @@ The retained example must build. Removed application tests retire with their
 implementations; a source-preservation/scope check guards the documented change.
 Source SCA still scans the entire current tree including development dependencies.
 
-Full-history secret findings remain an independent blocker. Application removal
-does not resolve historical credentials or establish that G1 has passed.
+Full-history secret findings remain visible and application removal does not
+resolve historical credentials. The maintainer-approved [isolated-demo policy](DEMO-SUPPLY-CHAIN.md)
+can accept only the exact expiring inherited inventory with containment; new
+findings, coverage changes and scanner errors still block G1.

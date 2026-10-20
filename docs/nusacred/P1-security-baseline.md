@@ -1,6 +1,6 @@
 # Pemeriksaan keamanan awal P1
 
-Tanggal: 20 Oktober 2026. **G1 belum lulus.** Baseline upstream v1.2.0,
+Tanggal awal: 20 Oktober 2026. Status G1 kini mengikuti required checks dan [kebijakan demo terisolasi](../../ci/DEMO-SUPPLY-CHAIN.md); bagian sebelumnya mencatat hasil historis. Baseline upstream v1.2.0,
 `ef516ecec4c79fd9fba6f1e8b226b52a4e8cf790`. Tidak ada pengecualian massal,
 allowlist global, penghapusan riwayat atau promosi image ke produksi.
 
@@ -308,3 +308,20 @@ credential material and an Azure client secret previously used by code making
 real token requests. Neither revocation nor fixture status is established. No
 provider authentication is attempted; values remain private. History checks
 must remain blocked pending evidence. No exception or mass allowlist is granted.
+
+## Demo scope decision — 21 October 2026
+
+The maintainer explicitly requested a demo-oriented supply-chain demonstration
+without external reporting. Known inherited history is now handled by the
+expiring exact-inventory policy G1-DEMO-HISTORY-20261021, not by asserting fixture
+status or revocation. All 2,282 findings remain visible; new findings, changed
+coverage, altered inventory, scanner failure and production scope are rejected.
+Only an internal, disposable runtime with fresh keys may use this disposition.
+Source/runtime/image vulnerability gates and strict dependency review remain
+mandatory. Read-only workflows cannot publish, sign or deploy.
+
+See [policy and containment](../../ci/DEMO-SUPPLY-CHAIN.md) and the sanitized
+CI source-control/runtime artifacts for actual outcomes. No external report
+was sent and no upstream confirmation is required for this bounded demo policy.
+Historical claims of blocked G1 above are superseded only when all current
+required checks and the new containment checks pass on the same head.

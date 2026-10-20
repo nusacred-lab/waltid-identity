@@ -9,6 +9,26 @@ def b64(b): return base64.urlsafe_b64encode(b).rstrip(b'=').decode()
 keyfile=R/'demo-keys.json'
 subprocess.run(['java',str(Path(__file__).with_name('GenerateDemoKeys.java')),str(keyfile)],check=True)
 keys=json.loads(keyfile.read_text())
+# Prove distinct disposable key pairs and refusal to replace an existing file.
+probe=R/'key-generation-probe.json'
+command=['java',str(Path(__file__).with_name('GenerateDemoKeys.java'))]
+subprocess.run(command+[str(probe)],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+second=json.loads(probe.read_text())
+all_keys=[keys['issuer'],keys['token'],second['issuer'],second['token']]
+if any(set(k)!={'kty','crv','x','y','d'} or k['kty']!='EC' or k['crv']!='P-256' for k in all_keys):
+ raise SystemExit('Synthetic key shape rejected')
+if len({json.dumps(k,sort_keys=True) for k in all_keys})!=4:
+ raise SystemExit('Synthetic keys must be fresh and distinct')
+if keyfile.stat().st_mode & 0o777 != 0o600 or R.stat().st_mode & 0o777 != 0o700:
+ raise SystemExit('Synthetic key permissions rejected')
+if subprocess.run(command+[str(probe)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0:
+ raise SystemExit('Existing key file must not be replaced')
+probe.unlink()
+preparation_report=Path(os.environ['HARNESS_PREPARATION_REPORT'])
+preparation_report.parent.mkdir(parents=True,exist_ok=True)
+preparation_report.write_text(json.dumps({'schemaVersion':1,'sourceCommit':os.environ['GITHUB_SHA'],
+ 'freshDistinctIssuerTokenAndRepeatKeys':True,'existingKeyFileRejected':True,
+ 'privateFileMode':'0600','privateDirectoryMode':'0700','upstreamCredentialsUsed':False},indent=2)+'\n')
 pub={k:v for k,v in keys['issuer'].items() if k!='d'}
 did='did:jwk:'+b64(json.dumps(pub,separators=(',',':')).encode())
 (R/'public-issuer.json').write_text(json.dumps({'did':did,'name':'LSP Teknik Ketenagalistrikan Nusantara (demo)'}))

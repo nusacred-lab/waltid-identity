@@ -14,7 +14,7 @@ permissions are used. `images-tested.json` records source, fat-JAR SHA-256, base
 manifest digest and local image **configuration** digest. The latter is not
 claimed to be a published registry manifest digest.
 
-Run only on an ephemeral Linux CI runner with unused ports 7004–7006. A new
+Run only on an ephemeral Linux CI runner. No service ports are published to the host; a Python runner in the same internal Docker bridge uses service aliases. External DNS forwarding and routes are blocked. A new
 private directory and distinct issuer/token P-256 keys are created per run by
 JDK JCA. An existing runtime directory is rejected. No local runtime, user
 wallet data or persistent developer volumes are mounted. Containers run without
@@ -26,6 +26,8 @@ there, as documented by [the driver](https://github.com/xerial/sqlite-jdbc/blob/
 An isolated probe using the same reviewed SQLite 3.53.2.0 JAR and pinned JRE
 failed on `noexec` and connected on `exec`; this does not replace the full HTTP
 flow. No capabilities, root access or writable root filesystem are added.
+
+The actual Docker configuration, mount sources/targets, privileges and exit state are verified. Six mutations of captured inspection data must be rejected without weakening live containers. The runner receives no private key mount. Fresh-key generation and overwrite rejection produce fixed-schema evidence. See [the demo policy](../DEMO-SUPPLY-CHAIN.md) for the explicit inherited-history disposition and production prohibition.
 
 The positive protocol flow creates a wallet and holder key, receives/stores a
 credential from the real issuer, previews the real presentation request, sends
