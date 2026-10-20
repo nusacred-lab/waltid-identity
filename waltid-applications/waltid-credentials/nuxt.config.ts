@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     srcDir: "src",
+    serverDir: "src/server",
 
     devtools: { enabled: true },
 

@@ -1,17 +1,19 @@
-import { serverQueryContent } from "#content/server";
+import { queryCollection } from "@nuxt/content/server";
+import { contentNodes } from "~/utils/contentNodes";
 
 export default defineEventHandler(async (event) => {
-    const name = decodeURIComponent(getRouterParam(event, "name"));
+    const parameter = getRouterParam(event, "name");
+    const name = parameter === undefined ? undefined : decodeURIComponent(parameter);
 
     if (name == "list" || name === undefined) {
-        const contentQuery = await serverQueryContent(event).find();
-        return contentQuery.filter((page) => page._path?.startsWith("/iso-mdoc-credentials/") && page.body?.children.find((elem) => elem.tag === "pre" && elem.props?.language === "json") != undefined).map((elem) => elem.title);
+        const contentQuery = await queryCollection(event, "content").all();
+        return contentQuery.filter((page) => page.path?.startsWith("/iso-mdoc-credentials/") && contentNodes(page.body).find((elem) => elem.tag === "pre" && elem.props?.language === "json") != undefined).map((elem) => elem.title);
     }
 
-    const contentQuery = await serverQueryContent(event).find();
+    const contentQuery = await queryCollection(event, "content").all();
 
     const matchedContent = contentQuery.find((content) => {
-        return content._path?.startsWith("/iso-mdoc-credentials/") && content.title === name;
+        return content.path?.startsWith("/iso-mdoc-credentials/") && content.title === name;
     });
 
     if (matchedContent === undefined) {
@@ -27,9 +29,9 @@ export default defineEventHandler(async (event) => {
         return `error: No credential found named: \"${name}\". Available credentials: ${n.join(", ")}`;
     }
 
-    const code = matchedContent.body?.children.find((elem) => {
+    const code = contentNodes(matchedContent.body).find((elem) => {
         return elem.tag === "pre" && elem.props?.language === "json";
     })?.props?.code;
 
-    return JSON.parse(code);
+    return JSON.parse(String(code));
 });

@@ -201,12 +201,65 @@ dari run gagal tidak diimpor. Uji negatif menolak metadata/lock berubah, lock
 baru tanpa review, runtime JAR berubah, serta fat JAR tanpa atribusi.
 
 [Acceptance strict 39451595960](https://github.com/nusacred-lab/waltid-identity/actions/runs/39451595960)
-sedang berjalan. Image/harness belum diklaim lulus. Base kandidat Temurin 21 JRE
-Ubuntu 24.04 dipatok pada manifest linux/amd64
-`sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c`;
-scan base saja melaporkan nol High/Critical pada 20 Oktober 2026, DB kurang
-dari 24 jam. Ketiga image yang dirakit tetap wajib dipindai ulang. Detail isolasi,
-fresh keys dan batas bukti tersedia pada [harness README](../../ci/harness/README.md).
+**gagal** saat readiness wallet: SQLite JDBC tidak dapat menginisialisasi native
+library pada temporary mount `noexec`. Probe terisolasi menggunakan JAR SQLite
+3.53.2.0 yang sama dan base JRE terpatok gagal pada `noexec`, lalu berhasil pada
+`exec`. Perbaikan membatasi temporary mount executable pada wallet; container
+lain tetap `noexec`, root filesystem tetap read-only dan proses tanpa root.
+
+[Acceptance strict 39454853516](https://github.com/nusacred-lab/waltid-identity/actions/runs/39454853516)
+pada head `60d8c522aff10ae87537a29243ddc403ce2047b3` **berhasil**: 13 tes COSE,
+tiga tes mdoc, nol gagal/error/skip, runtime/image scan nol High/Critical untuk
+ketiga layanan, serta alur HTTP issuance, penyimpanan wallet, preview,
+holder-bound presentation dan verifikasi nyata. Tidak ada image dipublikasikan.
+[Bukti terikat source dan digest](evidence/g1-api2-39454853516.json) mencatat merge
+commit yang benar-benar dibangun dan kesamaan tree dengan head PR; local image
+configuration digest dibedakan dari registry manifest digest.
+
+## Source lengkap dan remediasi lanjutan — 20–21 Oktober 2026
+
+Scan awal belum memasukkan seluruh development dependencies frontend.
+`--include-dev-deps` kini diwajibkan pada source scan/SBOM. Cakupan lengkap pada
+lock awal melaporkan **213 High/15 Critical**; angka ini tidak boleh dianggap
+sebagai temuan yang dikemas pada tiga actual runtime API2.
+
+Aturan patch pada init build memperbaiki classpath compile/plugin yang juga
+rentan, mempertahankan minor family Jackson/Netty dan tidak menurunkan versi.
+BOM service API2 tetap independen. Discovery hanya memperbarui keluarga lock yang
+ditargetkan; jalur strict tidak memakai update-locks atau write-metadata.
+[Discovery 39459390656](https://github.com/nusacred-lab/waltid-identity/actions/runs/39459390656)
+berhasil termasuk image dan credential flow. **35 hash tambahan** diperiksa
+terpisah; metadata diterima berisi **1.894 komponen/3.466 hash dan 159 lockfile**.
+Scan seluruh kandidat lock Gradle, termasuk dev, melaporkan nol High/Critical.
+
+Ketiga graph frontend diperbarui dengan strict peer validation dan 1.270 arsip
+npm direview terhadap metadata registry serta byte unduhan terpisah. Bundled
+component dan perbedaan root direktori arsip DefinitelyTyped juga diperiksa.
+Npm 10 mengalami error internal; npm 11.21.1 yang integritasnya diperiksa berhasil
+melakukan resolusi strict tanpa legacy-peer-deps. Toolchain builder Node, header
+native dan npm dipatok. Script lifecycle/build berjalan tanpa jaringan setelah
+instalasi arsip tanpa script. [Rincian dan batas cakupan](../../ci/FRONTEND-BASELINE.md).
+
+Migrasi awal Content belum mencakup seluruh navigasi/API dan ditolak tes SSR
+pada [run 39460484815](https://github.com/nusacred-lab/waltid-identity/actions/runs/39460484815).
+Perbaikan melengkapi navigasi, surrounding pages, TOC dan endpoint JSON menggunakan
+codec AST resmi yang sudah direview. Uji HTTP lokal terisolasi pada build nyata
+kemudian meluluskan halaman root/nested, target TOC, navigasi, 404 halaman hilang,
+tiga API credential yang cocok dengan Markdown sumber dan menolak nama tak ada,
+serta API mapping/manifest pada fixture sintetis versioned. CI untuk revisi final
+wajib mengulang build frontend dan acceptance API2 sebelum perubahan diterima.
+
+Scan source lengkap setelah lock hasil review diterapkan melaporkan **4 High,
+0 Critical**: `node-forge` 1.4.0 / CVE-2026-85393 dan `braces` 3.0.3 /
+CVE-2026-93687 pada dua frontend. Registry resmi belum menyediakan versi perbaikan
+saat diperiksa. Dependency review GitHub juga menolak braces. Tidak ada waiver,
+ignore atau perubahan namespace package agar scanner kehilangan temuan.
+
+Riwayat masih mempunyai 2.282 temuan, dikelompokkan secara privat menjadi 361
+nilai berbeda untuk triase. Pengelompokan bukan bukti false positive atau
+credential aktif. Tiga kelompok AWS/Azure belum mempunyai konfirmasi
+fixture/revocation. Tidak ada percobaan autentikasi atau laporan publik atas
+nilai tersebut. **G1 tetap belum lulus.**
 
 ## Gerbang berikutnya
 

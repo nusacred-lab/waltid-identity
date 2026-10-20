@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-20T15:46:18.493094+00:00",
-  "discoverySourceCommit": "784162061f2b4a42c48c1423cf303afb93f0ea45",
-  "metadataSha256": "b85e0a061c5e9e46b2b23523c8446ffa36b373d8bf6f5625d1d8c27074227378",
+  "reviewedAt": "2026-10-20T16:57:18.917381+00:00",
+  "discoverySourceCommit": "410d4dd1833055ba9f93071541bd83a6497e522a",
+  "metadataSha256": "516b8e04e9eb8f2625c8fc7c807152ab5461909c4c3b9ac022752418507280db",
   "artifacts": [
     {
       "group": "androidx.databinding",
@@ -2680,6 +2680,15 @@
     {
       "group": "com.fasterxml.jackson",
       "name": "jackson-base",
+      "version": "2.18.11",
+      "artifact": "jackson-base-2.18.11.pom",
+      "sha256": "f0db390604b15535e42b9540dc2a4e74912a4ca73c4b2dfe88b8e6b24af18bfb",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-base/2.18.11/jackson-base-2.18.11.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-base",
       "version": "2.18.7",
       "artifact": "jackson-base-2.18.7.pom",
       "sha256": "3de389e23dad48e88047c01dd3c9fedfbf569b8d1e985b74cb0c7a8f6ad85dd3",
@@ -2703,6 +2712,15 @@
       "sha256": "c442e80c313b5532db2ea7dcd20e0a030fa876f24008346a4b8e10a1fd2e3ff8",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-base/2.21.3/jackson-base-2.21.3.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-base",
+      "version": "2.21.7",
+      "artifact": "jackson-base-2.21.7.pom",
+      "sha256": "acf1265a240d27f58fb38fd8b6b2a57f5036bf6f8474e08da2eb626f29367f4c",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-base/2.21.7/jackson-base-2.21.7.pom.sha256"
     },
     {
       "group": "com.fasterxml.jackson",
@@ -2739,6 +2757,15 @@
       "sha256": "69d8bf9b2a7d42c9cf1d70ad82be42f6ac6fd788918a6e1d75792ecdcc117a0b",
       "method": "download-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.16.1/jackson-bom-2.16.1.pom"
+    },
+    {
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-bom",
+      "version": "2.18.11",
+      "artifact": "jackson-bom-2.18.11.pom",
+      "sha256": "3d929643b852c463090a3597c63d04fcb88d9bc0f22c5a0c781ae624b49deb40",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.18.11/jackson-bom-2.18.11.pom.sha256"
     },
     {
       "group": "com.fasterxml.jackson",
@@ -2784,6 +2811,15 @@
       "sha256": "19cc2ca65ea8f623e035e1023ab9de8627fe5f578fafdaff491060fb4cf0b5ab",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.21.6/jackson-bom-2.21.6.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-bom",
+      "version": "2.21.7",
+      "artifact": "jackson-bom-2.21.7.pom",
+      "sha256": "ecf645e79390beae614e8f83e42bd3e91a166831c37a3e783f37e67e41939495",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.21.7/jackson-bom-2.21.7.pom.sha256"
     },
     {
       "group": "com.fasterxml.jackson",
@@ -2860,6 +2896,24 @@
     {
       "group": "com.fasterxml.jackson.core",
       "name": "jackson-annotations",
+      "version": "2.18.11",
+      "artifact": "jackson-annotations-2.18.11.jar",
+      "sha256": "9eab0d36da981645392427eedcb087e13be542488e37f935723dc0be50d18a53",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.11/jackson-annotations-2.18.11.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
+      "version": "2.18.11",
+      "artifact": "jackson-annotations-2.18.11.module",
+      "sha256": "a3d63b38399ce7163731886ce315f2a0929ea6e30e5ca0b7135501c1ee5a9856",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.18.11/jackson-annotations-2.18.11.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
       "version": "2.18.7",
       "artifact": "jackson-annotations-2.18.7.module",
       "sha256": "cf3c115819d0e2c9e9617212045adc3081a23fe84d851f69eaaaded2ba3b46c2",
@@ -2905,6 +2959,24 @@
     {
       "group": "com.fasterxml.jackson.core",
       "name": "jackson-core",
+      "version": "2.18.11",
+      "artifact": "jackson-core-2.18.11.jar",
+      "sha256": "825fa72dfb9e2f8a642322f1390dbac22c30d15ebd6dc6b3772158821ee124eb",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.18.11/jackson-core-2.18.11.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.18.11",
+      "artifact": "jackson-core-2.18.11.module",
+      "sha256": "932066fd607a9ba40b79309866b1e1abb2a98887472a8638942c97d805be480d",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.18.11/jackson-core-2.18.11.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
       "version": "2.21.1",
       "artifact": "jackson-core-2.21.1.jar",
       "sha256": "1edd5f2e49dca5f8e4519957c24b7b3050bd1c7ee883920da33cff031ff1f7c0",
@@ -2937,6 +3009,24 @@
       "sha256": "3a8d7aaa7d85908bf191a1f6b2a9e00e0efb562a24d894a1cab8e7a45cdfc6cf",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.21.3/jackson-core-2.21.3.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.21.7",
+      "artifact": "jackson-core-2.21.7.jar",
+      "sha256": "8c5623b98f32d5f7e1287ff61ed50e08ab7b11381e991fff89327faabba42261",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.21.7/jackson-core-2.21.7.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.21.7",
+      "artifact": "jackson-core-2.21.7.module",
+      "sha256": "1584e2d46b3d57454a335dc7c6016282836e5e1f58b8fa14f287b098e37c596d",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-core/2.21.7/jackson-core-2.21.7.module.sha256"
     },
     {
       "group": "com.fasterxml.jackson.core",
@@ -2977,6 +3067,24 @@
     {
       "group": "com.fasterxml.jackson.core",
       "name": "jackson-databind",
+      "version": "2.18.11",
+      "artifact": "jackson-databind-2.18.11.jar",
+      "sha256": "075ad94a76c3edf83e1972dc26f476361eb6b9d0e260d93fc11105509bc79cab",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.11/jackson-databind-2.18.11.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.18.11",
+      "artifact": "jackson-databind-2.18.11.module",
+      "sha256": "8eaf3d85cb5b592d63828248b5d0752f485bd23f1307230e495a61ecd47db57f",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.18.11/jackson-databind-2.18.11.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
       "version": "2.21.1",
       "artifact": "jackson-databind-2.21.1.jar",
       "sha256": "b011eb5202d9ec889e27f1dcbdf6c63f06a76e7a16c0a1b30c6048d556c9a28e",
@@ -3009,6 +3117,24 @@
       "sha256": "69eca3b6fa7e140d82c4ab32d4361b4c73ddab278de2ee11d4d38efdf59dac7d",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.21.3/jackson-databind-2.21.3.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.21.7",
+      "artifact": "jackson-databind-2.21.7.jar",
+      "sha256": "1290c2795e93e8a6861a6c4d9ff0d844d32f5ea178362cb2721edf5561e828b1",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.21.7/jackson-databind-2.21.7.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.21.7",
+      "artifact": "jackson-databind-2.21.7.module",
+      "sha256": "5b1d87e994d3ee5a85321b1d9cb44f7ffa32af4006260bd12d232859539da1c4",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.21.7/jackson-databind-2.21.7.module.sha256"
     },
     {
       "group": "com.fasterxml.jackson.core",
@@ -3076,6 +3202,24 @@
     {
       "group": "com.fasterxml.jackson.dataformat",
       "name": "jackson-dataformat-xml",
+      "version": "2.21.7",
+      "artifact": "jackson-dataformat-xml-2.21.7.jar",
+      "sha256": "c0d3432b782600210be69840c123e72a6202eef29e6153150ba63a1b7311e95e",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.21.7/jackson-dataformat-xml-2.21.7.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-xml",
+      "version": "2.21.7",
+      "artifact": "jackson-dataformat-xml-2.21.7.module",
+      "sha256": "544b1c6ce173d96143921e83b969a2fd902f17708185f19582542b6c1ab382bc",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.21.7/jackson-dataformat-xml-2.21.7.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-xml",
       "version": "2.22.3",
       "artifact": "jackson-dataformat-xml-2.22.3.jar",
       "sha256": "8b99f4a11761246f2d721f02d2865dcca32dd8101082ebfbc3c16133b6c0d3e0",
@@ -3126,6 +3270,24 @@
       "sha256": "8944ab976779193f034f1d9db4f9f92c8670362d0c5f15add8b212ca3ca8f8ef",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.21.3/jackson-dataformat-yaml-2.21.3.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-yaml",
+      "version": "2.21.7",
+      "artifact": "jackson-dataformat-yaml-2.21.7.jar",
+      "sha256": "df2b3e6a194181dc067b7211d750926b4ae9e4f3c892a0005b8219a9b59be681",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.21.7/jackson-dataformat-yaml-2.21.7.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-yaml",
+      "version": "2.21.7",
+      "artifact": "jackson-dataformat-yaml-2.21.7.module",
+      "sha256": "ed5164ca82b9d2ad488755379d3890e3c7ed3963ee3671d3e39d3c9497ec84a1",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.21.7/jackson-dataformat-yaml-2.21.7.module.sha256"
     },
     {
       "group": "com.fasterxml.jackson.dataformat",
@@ -3184,6 +3346,15 @@
     {
       "group": "com.fasterxml.jackson.dataformat",
       "name": "jackson-dataformats-text",
+      "version": "2.21.7",
+      "artifact": "jackson-dataformats-text-2.21.7.pom",
+      "sha256": "f5e2d455736b7349378fdb2c97b999b8238fa4822f592fc7ea8545346ee8167b",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformats-text/2.21.7/jackson-dataformats-text-2.21.7.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformats-text",
       "version": "2.22.0",
       "artifact": "jackson-dataformats-text-2.22.0.pom",
       "sha256": "59a65f32e5bf698ea2f3d462ccae1712a351e151098220088b9c332f23698ccc",
@@ -3198,6 +3369,24 @@
       "sha256": "8cf73665c9bd9ff974349bf1579ec0a7fab1c0e96ef9e71e3399984e704e112f",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformats-text/2.22.3/jackson-dataformats-text-2.22.3.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-jsr310",
+      "version": "2.18.11",
+      "artifact": "jackson-datatype-jsr310-2.18.11.jar",
+      "sha256": "b2bab3e2c34f7b0b7f83bdb4de4c869c884466f756d76ed661ab3d2d9f35d1d3",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.11/jackson-datatype-jsr310-2.18.11.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-jsr310",
+      "version": "2.18.11",
+      "artifact": "jackson-datatype-jsr310-2.18.11.module",
+      "sha256": "252e929bb9b4b72321bb5cb4839aea1e17a777f515949f4d4f57b02ce4ef6aeb",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.11/jackson-datatype-jsr310-2.18.11.module.sha256"
     },
     {
       "group": "com.fasterxml.jackson.datatype",
@@ -3243,6 +3432,24 @@
       "sha256": "012ed9327736858679cc5d027d9ccb02594cae4f8820395956941100c07ef741",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.21.3/jackson-datatype-jsr310-2.21.3.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-jsr310",
+      "version": "2.21.7",
+      "artifact": "jackson-datatype-jsr310-2.21.7.jar",
+      "sha256": "5989b937f0aa5b6407e7a061077c9bfcac0590dc0a32e54b2fac6a3e2d49e812",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.21.7/jackson-datatype-jsr310-2.21.7.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.datatype",
+      "name": "jackson-datatype-jsr310",
+      "version": "2.21.7",
+      "artifact": "jackson-datatype-jsr310-2.21.7.module",
+      "sha256": "68f21a0db3a4f3aa6ca39f219f5ef5068f1187f7309974b60a10aa2601b5c69d",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.21.7/jackson-datatype-jsr310-2.21.7.module.sha256"
     },
     {
       "group": "com.fasterxml.jackson.datatype",
@@ -3328,6 +3535,24 @@
     {
       "group": "com.fasterxml.jackson.module",
       "name": "jackson-module-kotlin",
+      "version": "2.21.7",
+      "artifact": "jackson-module-kotlin-2.21.7.jar",
+      "sha256": "25b4ec1fcc4724a5a456260c340aab6a88c2c8450ec92eca34efaa01ef3e7e5b",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-module-kotlin/2.21.7/jackson-module-kotlin-2.21.7.jar.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.module",
+      "name": "jackson-module-kotlin",
+      "version": "2.21.7",
+      "artifact": "jackson-module-kotlin-2.21.7.module",
+      "sha256": "043bd55affa8eb2be3325b99ad43609658f06c28ee94ae852fe2b8b8dbf797e1",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-module-kotlin/2.21.7/jackson-module-kotlin-2.21.7.module.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.module",
+      "name": "jackson-module-kotlin",
       "version": "2.22.0",
       "artifact": "jackson-module-kotlin-2.22.0.jar",
       "sha256": "83faaa8dac44e3d2e5c0f84e5c3eb6c657d47f6035550abed0b1820ff9045548",
@@ -3364,6 +3589,15 @@
     {
       "group": "com.fasterxml.jackson.module",
       "name": "jackson-modules-java8",
+      "version": "2.18.11",
+      "artifact": "jackson-modules-java8-2.18.11.pom",
+      "sha256": "f731726357dd086c3b1056b1ffc428a830b06a729b190c70ae9489b30122647b",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-modules-java8/2.18.11/jackson-modules-java8-2.18.11.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.module",
+      "name": "jackson-modules-java8",
       "version": "2.18.7",
       "artifact": "jackson-modules-java8-2.18.7.pom",
       "sha256": "f54ff5ec571190b693af3d153c7f0f217632dca9ae5c40b242958381c47cd280",
@@ -3387,6 +3621,15 @@
       "sha256": "6ebb988252b8bd147e79ac546a7a0f5ad8b46acf8b7ef2729336f009562cf8d6",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-modules-java8/2.21.3/jackson-modules-java8-2.21.3.pom.sha256"
+    },
+    {
+      "group": "com.fasterxml.jackson.module",
+      "name": "jackson-modules-java8",
+      "version": "2.21.7",
+      "artifact": "jackson-modules-java8-2.21.7.pom",
+      "sha256": "3b05e8ee7206f4b9c10ba56354e4d6bf2f8866d6dbe3a2b67f0de9d7908a0e4d",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-modules-java8/2.21.7/jackson-modules-java8-2.21.7.pom.sha256"
     },
     {
       "group": "com.fasterxml.jackson.module",
@@ -30713,6 +30956,15 @@
     {
       "group": "tools.jackson",
       "name": "jackson-base",
+      "version": "3.1.7",
+      "artifact": "jackson-base-3.1.7.pom",
+      "sha256": "7285af7629720e24db11084bc5a89cb7af4d4d35339e7163902958a5cdfd10fe",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/jackson-base/3.1.7/jackson-base-3.1.7.pom.sha256"
+    },
+    {
+      "group": "tools.jackson",
+      "name": "jackson-base",
       "version": "3.2.1",
       "artifact": "jackson-base-3.2.1.pom",
       "sha256": "0b0406e39eb815ae61542e9422d7754d2105439adca6a32166aed73a26ea07f3",
@@ -30749,6 +31001,15 @@
     {
       "group": "tools.jackson",
       "name": "jackson-bom",
+      "version": "3.1.7",
+      "artifact": "jackson-bom-3.1.7.pom",
+      "sha256": "26c28ddf86ee17de2da550e0e8e88a14ed22370c880d813c88618df5f67e27ff",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/jackson-bom/3.1.7/jackson-bom-3.1.7.pom.sha256"
+    },
+    {
+      "group": "tools.jackson",
+      "name": "jackson-bom",
       "version": "3.2.1",
       "artifact": "jackson-bom-3.2.1.pom",
       "sha256": "65e3edbe23705040cf52ae9c5d9f16bfe680f59781b7ed1d4e2c1f3a52e1ab8f",
@@ -30781,6 +31042,24 @@
       "sha256": "c3439b0816947ad34de7d74151f0525ea7d8a6f3b883128f3ba9f825363d68bc",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/tools/jackson/core/jackson-core/3.1.1/jackson-core-3.1.1.module.sha256"
+    },
+    {
+      "group": "tools.jackson.core",
+      "name": "jackson-core",
+      "version": "3.1.7",
+      "artifact": "jackson-core-3.1.7.jar",
+      "sha256": "7608c367fd8a92666d28711519599543c180298259963184ce04d2947a8f71e7",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/core/jackson-core/3.1.7/jackson-core-3.1.7.jar.sha256"
+    },
+    {
+      "group": "tools.jackson.core",
+      "name": "jackson-core",
+      "version": "3.1.7",
+      "artifact": "jackson-core-3.1.7.module",
+      "sha256": "e24a6c9226e14019dde799c55cec01463a9c53a5cd9a4d25508d88556c463c6a",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/core/jackson-core/3.1.7/jackson-core-3.1.7.module.sha256"
     },
     {
       "group": "tools.jackson.core",
@@ -30826,6 +31105,24 @@
       "sha256": "ca3b41f5cf7774b87d9e97d8f6a2533212923db126b80b7f760a3b61267e87cd",
       "method": "published-sha256",
       "source": "https://repo.maven.apache.org/maven2/tools/jackson/core/jackson-databind/3.1.1/jackson-databind-3.1.1.module.sha256"
+    },
+    {
+      "group": "tools.jackson.core",
+      "name": "jackson-databind",
+      "version": "3.1.7",
+      "artifact": "jackson-databind-3.1.7.jar",
+      "sha256": "48c781de87e2016e1f0d973748a27130f11643e7ac080173f40e2d9669d84be3",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/core/jackson-databind/3.1.7/jackson-databind-3.1.7.jar.sha256"
+    },
+    {
+      "group": "tools.jackson.core",
+      "name": "jackson-databind",
+      "version": "3.1.7",
+      "artifact": "jackson-databind-3.1.7.module",
+      "sha256": "7e2a1aebbb0c2358cc49cbd121e678ae6fe2f48d715d779d5c8271d54d86d01a",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/core/jackson-databind/3.1.7/jackson-databind-3.1.7.module.sha256"
     },
     {
       "group": "tools.jackson.core",
@@ -30920,6 +31217,24 @@
     {
       "group": "tools.jackson.module",
       "name": "jackson-module-kotlin",
+      "version": "3.1.7",
+      "artifact": "jackson-module-kotlin-3.1.7.jar",
+      "sha256": "1611c77a17c28df5f1e3bd7053ef34be96987c2d09392897025be36647995431",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/module/jackson-module-kotlin/3.1.7/jackson-module-kotlin-3.1.7.jar.sha256"
+    },
+    {
+      "group": "tools.jackson.module",
+      "name": "jackson-module-kotlin",
+      "version": "3.1.7",
+      "artifact": "jackson-module-kotlin-3.1.7.module",
+      "sha256": "5910c52c76cfcd4ab0641b32d80f50844fdaafcd3173782a07a644c5472c4674",
+      "method": "published-sha256",
+      "source": "https://repo.maven.apache.org/maven2/tools/jackson/module/jackson-module-kotlin/3.1.7/jackson-module-kotlin-3.1.7.module.sha256"
+    },
+    {
+      "group": "tools.jackson.module",
+      "name": "jackson-module-kotlin",
       "version": "3.2.3",
       "artifact": "jackson-module-kotlin-3.2.3.jar",
       "sha256": "ece697d0723b24ad73c3d253bf1bb227c52dfa7c8a619e73d4e71c65517c47e1",
@@ -30939,24 +31254,24 @@
   "lockfiles": {
     "build-logic/buildscript-gradle.lockfile": "cd2bad6dc34f620a1144fb9ee8b032548981d88861987fd8e78a11af1ccf9fb3",
     "build-logic/gradle.lockfile": "eda2c66eab0730729bd0d0f4fc8d0a890706e1b4cf43a0c60a4a368056adad31",
-    "buildscript-gradle.lockfile": "506ead1f4a894fdf19c5eb1f3abbfab8f4b646e903bf976a9d2a70c8884141d9",
+    "buildscript-gradle.lockfile": "f9355b6d295d765cb252fe87ff10324577030c4ba05e15e84c67742ab3ab42a3",
     "third-party/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "third-party/cose-java/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "third-party/cose-java/gradle.lockfile": "db0575f46a8916997db4100a6dad20dd21100312cdc0b3a62930ceea0de41c53",
     "waltid-applications/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-applications/waltid-cli/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-applications/waltid-cli/gradle.lockfile": "3c31a61260cbc56be3683be9591ec9895b137167866ad6cbe54db312cf09b201",
+    "waltid-applications/waltid-cli/gradle.lockfile": "c9217b291c2bd9e3afba98f46e7a53b720cfd61ae7713d4fd47a34d942734a87",
     "waltid-libraries/auth/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/auth/waltid-idpkit/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/auth/waltid-idpkit/gradle.lockfile": "7aa1a8d0e3b6116205150e1f6362b3360f019a9710daf366fde3cb88ac79312b",
     "waltid-libraries/auth/waltid-ktor-authnz/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/auth/waltid-ktor-authnz/gradle.lockfile": "ec2e12b844a31482dab814cdecfa701e8dfddd435c27052e3836a9f29b7879ba",
+    "waltid-libraries/auth/waltid-ktor-authnz/gradle.lockfile": "40c51dea4ce9027f086dcb8a5583b3cb54d49c66518efce4d92a6c3c2331ce1e",
     "waltid-libraries/auth/waltid-permissions/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/auth/waltid-permissions/gradle.lockfile": "72952b7473634d81ee1be91e5d0f94c233da2a30acebd2083f8a925034810e2c",
     "waltid-libraries/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/credentials/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/credentials/waltid-credential-key-resolver/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/credentials/waltid-credential-key-resolver/gradle.lockfile": "3fe6d0b8b7dbcd93b0c49b9b7f15d0edd98a351f3dc690044c7f3ad998552bc4",
+    "waltid-libraries/credentials/waltid-credential-key-resolver/gradle.lockfile": "4661b7af522d2186b5ab41022e4f9dddadf9cbf5dd9930033c0e3e186b5864a4",
     "waltid-libraries/credentials/waltid-dcql/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/credentials/waltid-dcql/gradle.lockfile": "82aaf5de83ee1a603ef4df81b867ac73206a6ae7437121cb5fd9700e66217d7b",
     "waltid-libraries/credentials/waltid-dif-definitions-parser/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -30980,11 +31295,11 @@
     "waltid-libraries/credentials/waltid-trust-registry/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/credentials/waltid-trust-registry/gradle.lockfile": "7507a64a5e5f40cde4f1a176e8cad57dd03dcdbad4acb51da99128d0a3f2ffb8",
     "waltid-libraries/credentials/waltid-verification-policies/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/credentials/waltid-verification-policies/gradle.lockfile": "ead7faaa4a5737165334060125070aa673420ee2123fd59fdb0314652a43142b",
+    "waltid-libraries/credentials/waltid-verification-policies/gradle.lockfile": "5b4b126a18d36f657da8f44a5184c33290f318baf7a614ba7d7be9f2271c6112",
     "waltid-libraries/credentials/waltid-verification-policies2/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/credentials/waltid-verification-policies2/gradle.lockfile": "4bbcf99bcf43d1db1a37ad6b5148184749ae90bbefa40eadc6b9744a61629f7f",
+    "waltid-libraries/credentials/waltid-verification-policies2/gradle.lockfile": "ab2e717012baedb797e6efe6504f9ca9d744a86be851a5b996cacd19fa8f8d00",
     "waltid-libraries/credentials/waltid-verification-policies2-vp/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/credentials/waltid-verification-policies2-vp/gradle.lockfile": "097e433cba40bc45c4e9ce3a1e118acedb669880d63059fe6c596687d7443a9b",
+    "waltid-libraries/credentials/waltid-verification-policies2-vp/gradle.lockfile": "a78ef06b5dc809513122f31b6d6f167fdf0589ab8cfe29b227ca7dfc7433a2f8",
     "waltid-libraries/credentials/waltid-vical/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/credentials/waltid-vical/gradle.lockfile": "62259664096c4c7b415064176f98354a80888126b3d6635f13e5f7b82e52ed6d",
     "waltid-libraries/credentials/waltid-w3c-credentials/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -30997,7 +31312,7 @@
     "waltid-libraries/crypto/waltid-crypto-aws/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/crypto/waltid-crypto-aws/gradle.lockfile": "c291483107ee96a4a08d79fad68ea4fe3577807eafe4a563c1a52c0164ea7428",
     "waltid-libraries/crypto/waltid-crypto-azure/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/crypto/waltid-crypto-azure/gradle.lockfile": "39a50b79ee962a57a2228ee71fbbd7f448697ac52f0547f21d76756005c2dc68",
+    "waltid-libraries/crypto/waltid-crypto-azure/gradle.lockfile": "6d10b48e636999efb68eed38daedd92c619c2322a3642402d13f24775a5bb04b",
     "waltid-libraries/crypto/waltid-crypto-oci/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/crypto/waltid-crypto-oci/gradle.lockfile": "a94bc0c4e7528e200ce7a5a4370707d5c24b36240beb8b20a2b77bef7fa8b865",
     "waltid-libraries/crypto/waltid-crypto2/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -31011,7 +31326,7 @@
     "waltid-libraries/crypto/waltid-crypto2-kms-aws-sdk/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/crypto/waltid-crypto2-kms-aws-sdk/gradle.lockfile": "ef36caf682b717edeaf33f7201029e2cfb99cbd5f911ef9bbce92ae2ba93064e",
     "waltid-libraries/crypto/waltid-crypto2-kms-azure-identity/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/crypto/waltid-crypto2-kms-azure-identity/gradle.lockfile": "f1a248e185bee4799504300af3a7c17ff5610a27c99b94758dd64c447564a76e",
+    "waltid-libraries/crypto/waltid-crypto2-kms-azure-identity/gradle.lockfile": "3f97ae8d73f3d3b1bbcfa4fbc25d82606e7f43e0de4ad3fcdaf5b7ca5a20d9e8",
     "waltid-libraries/crypto/waltid-crypto2-migration-v1/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/crypto/waltid-crypto2-migration-v1/gradle.lockfile": "572cbec619f9013d179ba88f7f5d1097d07c6179711994dadc0b813184519e80",
     "waltid-libraries/crypto/waltid-crypto2-pkcs11/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -31026,13 +31341,13 @@
     "waltid-libraries/protocols/waltid-18013-7-verifier/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/protocols/waltid-18013-7-verifier/gradle.lockfile": "0150e3d72f53ec20f82a3337a84dbedc3ad2dded83aed63e7ee02f986ec1eae6",
     "waltid-libraries/protocols/waltid-openid4vc/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/protocols/waltid-openid4vc/gradle.lockfile": "f3ee9a74aa39cc7adcc37d76a886e5c267f6da8f006f52214a745d5a44598a09",
+    "waltid-libraries/protocols/waltid-openid4vc/gradle.lockfile": "c61938600b75628eb801036d3bc863e6c60a842e6cd102a31417e124a11cf3ac",
     "waltid-libraries/protocols/waltid-openid4vc-wallet/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/protocols/waltid-openid4vc-wallet/gradle.lockfile": "4d84ee2d453f917bef8763389230b72e5d88a73a8fccb4251cc1e84d54814df3",
     "waltid-libraries/protocols/waltid-openid4vc-wallet-persistence-server/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/protocols/waltid-openid4vc-wallet-persistence-server/gradle.lockfile": "5568852a0bbd6d7c11caf88fd6124c6fe8f73228a5b8a07f73907027b342daff",
     "waltid-libraries/protocols/waltid-openid4vc-wallet-server/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/protocols/waltid-openid4vc-wallet-server/gradle.lockfile": "0c52c3bc5c3ac7497a06eee608420ea484a5ddabc47d045c1334450289a15686",
+    "waltid-libraries/protocols/waltid-openid4vc-wallet-server/gradle.lockfile": "a9263619749249289fad50bed9456e728f2c85c2013f4c88dcc8484233fd9d0c",
     "waltid-libraries/protocols/waltid-openid4vci/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/protocols/waltid-openid4vci/gradle.lockfile": "d4a861452470cf4350b1bdf26e6888fe8da80104ae64917bba0af7b13c667eec",
     "waltid-libraries/protocols/waltid-openid4vci-wallet/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -31044,7 +31359,7 @@
     "waltid-libraries/protocols/waltid-openid4vp-verifier/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/protocols/waltid-openid4vp-verifier/gradle.lockfile": "82be04658be332130bb774654acc0c957824b4d5ea6e15790d0c8fa11d2eb4fd",
     "waltid-libraries/protocols/waltid-openid4vp-verifier-openapi/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/protocols/waltid-openid4vp-verifier-openapi/gradle.lockfile": "611cd9333151a5375506c40d0416efd16bdcf3d912cbf4b8357ed7c61199b6fd",
+    "waltid-libraries/protocols/waltid-openid4vp-verifier-openapi/gradle.lockfile": "a8102304fd2d3c7d391e814e30cfc0d3bbde3cb81bac179c566cdd2886de157f",
     "waltid-libraries/protocols/waltid-openid4vp-wallet/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/protocols/waltid-openid4vp-wallet/gradle.lockfile": "17ea58fd67ec932ded8e30c576229b644e62d63e4f17ac48bf3583aaf2c55359",
     "waltid-libraries/sdjwt/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -31053,7 +31368,7 @@
     "waltid-libraries/waltid-core-wallet/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/waltid-core-wallet/gradle.lockfile": "10cec72fdc189103fb61ad8082f9973d0f4cbb1be73183acedf3fb7bbbab3a8f",
     "waltid-libraries/waltid-did/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-libraries/waltid-did/gradle.lockfile": "9783f426890f16868eaba767250342b612fd2a9b8838426d3cae3a5deb975353",
+    "waltid-libraries/waltid-did/gradle.lockfile": "7bf2554cfb6a24d2bf62051e96f296322b94ec92c096dbc6012527d6b51b2842",
     "waltid-libraries/waltid-java-compat/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-libraries/waltid-java-compat/gradle.lockfile": "b92ba94ff0b2b89079fbddc7d31c9c27e5ea722caacd51f381baafa29bfe78c0",
     "waltid-libraries/waltid-library-commons/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
@@ -31069,29 +31384,29 @@
     "waltid-libraries/web/waltid-web-data-fetching/gradle.lockfile": "a24775024aa0f3d94fa3ac8d5a435bcb0739ab73365450ec8f6eccdb21738c53",
     "waltid-services/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-e2e-tests/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-e2e-tests/gradle.lockfile": "c1d50199ff0d0ce822509cfaab29f26e674e90ba752963ca02ed5332ca72801b",
+    "waltid-services/waltid-e2e-tests/gradle.lockfile": "c4b01bce1e931d274819075f415dc5ae945881a8f8c6f4554a2c21702989ebc8",
     "waltid-services/waltid-etsi-plugtest-cli/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-etsi-plugtest-cli/gradle.lockfile": "bf4818b9c70bb31e6e974dc472ed119f23d7ea4f267f140b22b3d9e5f720cbc1",
     "waltid-services/waltid-integration-tests/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-integration-tests/gradle.lockfile": "ffb1e69125295d337ddad8436db8d813020f9a794b54b82e062a33a39773027c",
+    "waltid-services/waltid-integration-tests/gradle.lockfile": "747098ef5b5c750ca3a5eb2476c73eefc4bd0d0527c483f87c04fc20a2f7aec2",
     "waltid-services/waltid-issuer-api/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-issuer-api/gradle.lockfile": "20810f5d5746559c42150511163974c4ff64aa4863a630dbc417888baff6ccd5",
+    "waltid-services/waltid-issuer-api/gradle.lockfile": "3b2513bc69a7837f4def6bbc768bf793619a70062db750bc6bd8a18ba2dc9f2a",
     "waltid-services/waltid-issuer-api2/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-issuer-api2/gradle.lockfile": "0b03a44fa5d666d47d8c20f8e3670109cd9083a492889b0331efdbddbd2eaf09",
     "waltid-services/waltid-openid4vp-conformance-runners/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-openid4vp-conformance-runners/gradle.lockfile": "c4bf4bfe7a52c633c0e374083316d16f6fd42ec83c91458f672190ff8a75cace",
     "waltid-services/waltid-service-commons/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-service-commons/gradle.lockfile": "e2df8c645cb60e5b03e5952fbd763d9490b87d9a6a9c7a8bc7d5b34aea7afa4b",
+    "waltid-services/waltid-service-commons/gradle.lockfile": "dce237066823bd9927fed15e535cd41b3de4e2fae7591ac7d83eb9fd86181303",
     "waltid-services/waltid-service-commons-test/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-service-commons-test/gradle.lockfile": "b9c81fd3f01a5083b14d8a573bffb61cef3cdf90fbfe34d79a27cc18eec8db79",
+    "waltid-services/waltid-service-commons-test/gradle.lockfile": "ec5af0a239f689845854c6e09044d9837eddfcf7318b421bfef6fed045b261d6",
     "waltid-services/waltid-service-events/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-service-events/gradle.lockfile": "ecb04ffee31da7370b25aaf079304444fea2d5044c5e7386bcbddf54a65b8f3b",
     "waltid-services/waltid-verifier-api/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-verifier-api/gradle.lockfile": "dcc419f49d44661420831bb626b56a7e8f99f787e68871bbeab17e20ef409d6c",
+    "waltid-services/waltid-verifier-api/gradle.lockfile": "fcdf32937370e1807fb03d1d78b68b72b97e06efaf81be6a30d6413b6ed23826",
     "waltid-services/waltid-verifier-api2/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-verifier-api2/gradle.lockfile": "0021cc61bdae1f07f811da08c6306e244e5c2f393f404f67838d0addc7bb0b65",
     "waltid-services/waltid-wallet-api/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
-    "waltid-services/waltid-wallet-api/gradle.lockfile": "e5de6112251c6677476bdcdad150de7316ab3565f30ea34605f79bf55c36965f",
+    "waltid-services/waltid-wallet-api/gradle.lockfile": "2044dad50828cfda7c36b2959ee514f19412d835ed9bdc6325c5ab3c26da86ca",
     "waltid-services/waltid-wallet-api2/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",
     "waltid-services/waltid-wallet-api2/gradle.lockfile": "faca5c71fa42b83e1e8f3700ad6e2a568e477b42ef81a2f64942dc973249f0a5",
     "waltid-services/waltid-wallet-migration/buildscript-gradle.lockfile": "e4a6c3491a87c07fba697ac1da0e01cc29dde400f5d3a08031a0c7b46961f9f9",

@@ -1,6 +1,7 @@
-import { serverQueryContent } from "#content/server";
+import { queryCollection } from "@nuxt/content/server";
+import { contentNodes } from "~/utils/contentNodes";
 
 export default defineEventHandler(async (event) => {
-    const contentQuery = await serverQueryContent(event).find();
-    return contentQuery.filter((page) => page._path?.startsWith("/w3c-credentials/") && page.body?.children.find((elem) => elem.tag === "pre" && elem.props?.language === "json") != undefined).map((elem) => elem.title);
+    const contentQuery = await queryCollection(event, "content").all();
+    return contentQuery.filter((page) => page.path?.startsWith("/w3c-credentials/") && contentNodes(page.body).find((elem) => elem.tag === "pre" && elem.props?.language === "json") != undefined).map((elem) => elem.title);
 });

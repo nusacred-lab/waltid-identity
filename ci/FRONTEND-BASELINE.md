@@ -11,6 +11,9 @@ Content 2 to Content 3 to replace the vulnerable MDC parser, and Image 1 to Imag
 2 to replace the vulnerable sharp dependency. The collection retains
 `src/content`, the page renderer uses the official collection query API, and
 the existing syntax theme/languages are retained with the new configuration.
+Navigation, surrounding pages, table of contents and server JSON routes also
+use the Content 3 APIs. The already-reviewed Minimark codec converts its stored
+AST for JSON extraction instead of introducing a new Markdown parser.
 
 Sources used for the migration:
 
@@ -42,16 +45,22 @@ checking. Resolver failure was never treated as acceptance.
 The networked container installs packages with all lifecycle scripts disabled.
 Rebuild, native compilation, application build and documentation HTTP tests then
 run in a separate container with **no network**. Verified Node headers are
-provided locally and native builds use source. No additional binary download is
-allowed to succeed during package scripts. Containers run without root, extra
+provided locally and source builds are requested for native lifecycle compilation.
+Platform binaries already included in reviewed npm archives retain those archive
+hash guarantees. No additional binary download is allowed to succeed during
+package scripts. Containers run without root, extra
 capabilities or privilege escalation; only disposable source copies and reviewed
 tool directories are mounted. Raw package/build logs are withheld. Evidence
 contains fixed-schema outcomes and failure categories.
 
 Documentation regression checks require real SSR output for the root and a
-nested mdoc page, including their expected headings, plus HTTP 404 for a missing
-page. The other two upstream apps must compile. These jobs must pass before the
-frontend changes are accepted.
+nested mdoc page, including headings, navigation, surrounding links and TOC,
+plus HTTP 404 for a missing page. Three credential JSON APIs must list and
+return data matching the original Markdown fixtures and reject unknown names.
+Mapping/manifest extraction uses a versioned synthetic Markdown fixture overlaid
+only in the disposable test copy; evidence identifies that overlay. The actual
+HTTP handlers and parser run against it. The other two upstream apps must
+compile. These jobs must pass before the frontend changes are accepted.
 
 As of 2026-10-20, local source scanning including development dependencies still
 reports `CVE-2026-85393` in `node-forge` 1.4.0 and `CVE-2026-93687` in `braces`

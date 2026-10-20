@@ -1,16 +1,18 @@
-import { serverQueryContent } from "#content/server";
+import { queryCollection } from "@nuxt/content/server";
+import { contentNodes } from "~/utils/contentNodes";
 
 export default defineEventHandler(async (event) => {
-    const name = decodeURIComponent(getRouterParam(event, "name"));
+    const parameter = getRouterParam(event, "name");
+    const name = parameter === undefined ? undefined : decodeURIComponent(parameter);
     if (name === undefined) {
         setResponseStatus(event, 400);
         return "error: No name set!";
     }
 
-    const contentQuery = await serverQueryContent(event).find();
+    const contentQuery = await queryCollection(event, "content").all();
 
     const matchedContent = contentQuery.find((content) => {
-        return content._path?.startsWith("/w3c-credentials/") && content.title === name;
+        return content.path?.startsWith("/w3c-credentials/") && content.title === name;
     });
 
     if (matchedContent === undefined) {
@@ -26,7 +28,7 @@ export default defineEventHandler(async (event) => {
         return `error: No credential found named: \"${name}\". Available credentials: ${n.join(", ")}`;
     }
 
-    const codeblocksAndTitles = matchedContent.body?.children.filter((elem) => {
+    const codeblocksAndTitles = contentNodes(matchedContent.body).filter((elem) => {
         return (elem.tag === "pre" && elem.props?.language === "json") || elem.tag === "h2";
     });
 
@@ -49,7 +51,7 @@ export default defineEventHandler(async (event) => {
         }
 
         if (manifestInTitle && codeblockOrTitle.tag === "pre" && codeblockOrTitle.props?.language === "json") {
-            return JSON.parse(codeblockOrTitle.props.code);
+            return JSON.parse(String(codeblockOrTitle.props.code));
         }
     }
 

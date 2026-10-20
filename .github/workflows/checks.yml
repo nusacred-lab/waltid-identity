@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
-      - name: Require both full-history and source dependency checks
+      - name: Require source controls, dependency scans and frontend builds
         env:
           SOURCE_CONTROLS_RESULT: ${{ needs.source-controls.result }}
           SOURCE_DEPENDENCIES_RESULT: ${{ needs.source-dependencies.result }}

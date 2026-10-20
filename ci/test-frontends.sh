@@ -11,6 +11,8 @@ python3 ci/verify-npm-review.py
 frontend_private="$(mktemp -d "${RUNNER_TEMP:-/tmp}/frontend-${frontend_app}.XXXXXXXX")"
 frontend_evidence="$PWD/build/frontend-evidence/$frontend_app"
 mkdir -p "$frontend_evidence"
+rm -f -- "$frontend_evidence/failure.json" "$frontend_evidence/docs-failure.json" \
+  "$frontend_evidence/docs-smoke.json" "$frontend_evidence/build.json"
 frontend_containers=()
 cleanup() {
   for frontend_container in "${frontend_containers[@]}"; do
@@ -25,6 +27,11 @@ import shutil, sys
 source = Path('waltid-applications') / sys.argv[1]
 shutil.copytree(source, sys.argv[2], symlinks=True,
                 ignore=shutil.ignore_patterns('node_modules', '.nuxt', '.output', '.data', '.git'))
+if sys.argv[1] == 'waltid-credentials':
+    # This versioned synthetic fixture exercises optional JSON API sections;
+    # it is overlaid only in the disposable test copy, not the application source.
+    target = Path(sys.argv[2]) / 'src/content/3.w3c-credentials/g1-contract-fixture.md'
+    shutil.copyfile('ci/fixtures/content-contract.md', target)
 PYTHON
 frontend_builder="$(python3 -c 'import json; print(json.load(open("ci/frontend-toolchain.json"))["builderImage"])')"
 run_stage() {
@@ -79,6 +86,7 @@ record = dict(schemaVersion=1, app=app, sourceCommit=os.environ['GITHUB_SHA'],
               nodeVersion=toolchain['nodeVersion'], npmVersion=toolchain['npmVersion'],
               builderImage=toolchain['builderImage'], peerValidation='strict',
               lifecycleScriptsDisabledDuringInstall=True, networkDisabledDuringScriptsAndBuild=True,
+              syntheticDocumentationFixture=app == 'waltid-credentials',
               build='passed', productionDeployed=False)
 (pathlib.Path(destination) / 'build.json').write_text(json.dumps(record, indent=2) + '\n')
 PYTHON

@@ -46,25 +46,25 @@
       <main role="main" class="relative top-25 lg:top-22 flex-grow pt-1 px-3 lg:w-7/12 w-full px-2">
         <slot />
         <hr class="border border-0.1 border-slate-700" />
-        <div class="pb-8">
-          <ContentQuery :path="route.path" find="surround" v-slot="{ data }">
-            <div v-if="data" class="text-sm md:text-md">
-              <div :class="!data[0] ? 'justify-right' : 'justify-between'" class="flex mt-7">
-                <NuxtLink v-if="data[0]" :to="data[0]._path"
+        <nav aria-label="Previous and next pages" class="pb-8">
+          <template v-if="surround">
+            <div v-if="surround" class="text-sm md:text-md">
+              <div :class="!surround[0] ? 'justify-right' : 'justify-between'" class="flex mt-7">
+                <NuxtLink v-if="surround[0]" :to="surround[0].path"
                   class="flex items-center gap-2 font-bold hover:text-primary-300 text-left">
                   <ChevronLeftIcon class="h-4" />
-                  {{ data[0].title }}
+                  {{ surround[0].title }}
                 </NuxtLink>
 
-                <NuxtLink v-if="data[1]" :to="data[1]._path"
+                <NuxtLink v-if="surround[1]" :to="surround[1].path"
                   class="flex items-center gap-2 font-bold hover:text-primary-300 text-right">
-                  {{ data[1].title }}
+                  {{ surround[1].title }}
                   <ChevronRightIcon class="h-4" />
                 </NuxtLink>
               </div>
             </div>
-          </ContentQuery>
-        </div>
+          </template>
+        </nav>
       </main>
       <div class="hidden lg:block relative top-18 w-fixed w-2/12 flex-shrink flex-grow-0 px-2">
         <!-- fixed-width -->
@@ -139,6 +139,10 @@ interface NavigationItem {
 }
 
 const route = useRoute();
+const { data: surround } = await useAsyncData(
+  () => `content-surround:${route.path}`,
+  () => queryCollectionItemSurroundings('content', route.path),
+);
 const showMobileMenu = ref(false);
 
 function toggleMobileMenu() {

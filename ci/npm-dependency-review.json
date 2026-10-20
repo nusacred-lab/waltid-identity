@@ -3,8 +3,8 @@
   "reviewedAt": "2026-10-20T16:40:34.170544+00:00",
   "scope": "Three frontend build dependency graphs, including development/optional platforms and bundled components. Integrity consistency, not source audit or publisher attestation.",
   "manifestFiles": {
-    "waltid-applications/waltid-credentials/package.json": "c3a9d6f97eca824ead5d9c7d6ff32f6157905f2c241d14b6aebce531923f19a8",
-    "waltid-applications/waltid-credentials/package-lock.json": "745a73a85ccd307ed55fd50da9b80d585c845bd26f3c4a0ef392a8a40cde4b09",
+    "waltid-applications/waltid-credentials/package.json": "1e8aa4987f9837e943100229ff553e66b7bfbdb9c8948b4b264e41fd19025f8e",
+    "waltid-applications/waltid-credentials/package-lock.json": "898f8f243502a648109e940e868ce59a52fed1422e462863e6c74e840fb08fc1",
     "waltid-applications/waltid-credentials/.npmrc": "0b4882599211301b6b1a359c6ea58c31c90ba3fe567eeb4982787379fc099d7a",
     "waltid-applications/waltid-web-portal2/package.json": "cbcc5502041b45fc0ff653fe63d5572d225df23c1ad7dc843807b5e9f5017da0",
     "waltid-applications/waltid-web-portal2/package-lock.json": "37f7611640d536d889e3976a61bba5a2bda8217cc48f783be282b8db9b95fd48",
