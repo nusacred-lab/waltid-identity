@@ -43,6 +43,36 @@ allowlist global, penghapusan riwayat atau promosi image ke produksi.
 | `org.cose:cose-java` | `1.1.1-WALT-SNAPSHOT` | Varian khusus walt.id dari Maven walt.id; asal source/build, checksum, lisensi, resolusi timestamp snapshot dan kebutuhan target harus ditelusuri. Jangan menggantinya diam-diam dengan upstream umum. |
 | `id.walt:waltid-nftkit` | `1.2311291144.0` | Alias untuk web3login; validasi apakah benar masuk dependency target. Keberadaan katalog tidak membuktikan dikemas pada tiga API2. |
 
+Penelusuran COSE pada 20 Oktober 2026 menemukan snapshot timestamp
+`1.1.1-WALT-20250317.122639-2`, dipublikasikan dari
+`https://maven.waltid.dev/snapshots/org/cose/cose-java/1.1.1-WALT-SNAPSHOT/`.
+Binary berisi `git.properties` dengan commit
+`fc897fa9da31f35c5f2e3e092496ad1c57e10457` dan **`git.dirty=true`**.
+Seluruh 24 file Java source JAR cocok dengan source commit pada repo
+[walt-id/cose-java](https://github.com/walt-id/cose-java/tree/fc897fa9da31f35c5f2e3e092496ad1c57e10457)
+setelah normalisasi akhir baris, tanpa path hilang. Repo tersebut kini archived.
+
+POM yang dipublikasikan berbeda dari POM commit yang diklaim: BouncyCastle
+`bcprov-jdk18on`/`bcpkix-jdk18on` versi `1.80` diganti dengan
+`bcprov-lts8on`/`bcpkix-lts8on` versi `2.73.7`. Binary dan source JAR tidak
+memuat LICENSE/NOTICE; teks LICENSE tersedia pada commit source. Kecocokan source
+belum membuktikan binary dibangun hanya dari source tersebut. Asal perubahan POM,
+dependency LTS, verifikasi binary/source dan pengemasan lisensi masih harus ditangani.
+
+SHA-256 hasil unduhan untuk penelusuran (belum menjadi checksum yang diterima
+pada verification metadata rilis):
+
+| Artefak snapshot timestamp | SHA-256 |
+| --- | --- |
+| Binary JAR | `f69dbdabcf8ead0b78d6d36098538f0febbfa38b07114b1965816741b671419e` |
+| Source JAR | `8fc17a7c02b21a2d5326853986840ad098dfc51a53b21a5f1468c001685142a3` |
+| POM | `3638b3a4df74a42dc455204a657c7b96af759650cabfc49009bf5fa5e8de2654` |
+
+Referensi langsung `identityLibs.java.cose` ditemukan pada modul mdoc-credentials
+yang digunakan issuer2; ini memerlukan pemeriksaan dependency target nyata.
+`id.walt:waltid-nftkit` ditemukan pada web3login-microservice, bukan bukti masuk
+classpath tiga API2. Hasil resolusi build tetap menjadi penentu akhirnya.
+
 Repository deklaratif: Maven Central, Google, Gradle Plugin Portal,
 `https://maven.waltid.dev/releases` dan `https://maven.waltid.dev/snapshots`.
 Belum ada lock/verification metadata yang diterima untuk dependency target maupun

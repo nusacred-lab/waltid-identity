@@ -26,8 +26,8 @@ jobs:
         with:
           distribution: temurin
           java-version: |
-            17
-            21
+            17.0.20+1
+            21.0.12+1
       - name: Verify Gradle wrapper independently pinned to upstream checksums
         run: |
           echo '238e777fcddd7e34f9708186085def2abd6e08e658505b38718d79d74c21abd5  gradle/wrapper/gradle-wrapper.jar' | sha256sum -c -
