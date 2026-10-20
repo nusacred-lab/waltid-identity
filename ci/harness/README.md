@@ -20,6 +20,12 @@ JDK JCA. An existing runtime directory is rejected. No local runtime, user
 wallet data or persistent developer volumes are mounted. Containers run without
 root, extra Linux capabilities or privilege escalation, with read-only root
 filesystems, private writable temporary storage and disposable wallet storage.
+Issuer/verifier temporary mounts use `noexec`. Wallet requires `exec` on its
+private temporary mount because SQLite JDBC extracts/loads its native library
+there, as documented by [the driver](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md).
+An isolated probe using the same reviewed SQLite 3.53.2.0 JAR and pinned JRE
+failed on `noexec` and connected on `exec`; this does not replace the full HTTP
+flow. No capabilities, root access or writable root filesystem are added.
 
 The positive protocol flow creates a wallet and holder key, receives/stores a
 credential from the real issuer, previews the real presentation request, sends

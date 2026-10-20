@@ -48,13 +48,16 @@ done
 network="$(docker network create "$prefix")"
 for service in issuer wallet verifier; do
   case "$service" in issuer) port=7005;; wallet) port=7006;; verifier) port=7004;; esac
+  temporary_options=rw,noexec,nosuid,nodev,size=256m
   mounts=(--mount "type=bind,source=$HARNESS_RUNTIME/walt/$service,target=/waltid-$service-api2/config,readonly")
   if [[ "$service" == wallet ]]; then
+    # SQLite JDBC extracts/loads its verified native library from java.io.tmpdir.
+    temporary_options=rw,exec,nosuid,nodev,size=256m
     mounts+=(--mount "type=bind,source=$HARNESS_RUNTIME/data,target=/data")
   fi
   container="$(docker create --network "$network" --network-alias "$service" \
     --cap-drop ALL --security-opt no-new-privileges --memory 2g --pids-limit 512 \
-    --read-only --tmpfs /tmp:rw,nosuid,nodev,size=256m \
+    --read-only --tmpfs "/tmp:$temporary_options" \
     --publish "127.0.0.1:$port:$port" "${mounts[@]}" "$prefix-$service")"
   containers+=("$container")
   docker start "$container" >/dev/null
