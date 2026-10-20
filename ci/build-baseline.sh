@@ -29,3 +29,4 @@ python3 ci/verify-cose-source.py
  --tests id.walt.mdoc.JVMMdocTest.testSigningMdlWithIssuer \
  --tests id.walt.mdoc.JVMMdocTest.testSigningMdlWithIntermediateIssuer \
  --tests id.walt.mdoc.JVMMdocTest.testSigningMdlWithOnlyTheIntermediateIssuerCertInX5Chain
+python3 ci/check-baseline-tests.py

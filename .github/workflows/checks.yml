@@ -9,7 +9,7 @@ concurrency:
   group: checks-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  security:
+  source-controls:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -24,6 +24,50 @@ jobs:
       - run: python3 ci/install_tool.py gitleaks "$RUNNER_TEMP/tools"
       - name: Scan complete Git history (redacted)
         run: '"$RUNNER_TEMP/tools/gitleaks" git . --redact --no-banner'
+  source-dependencies:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 ci/install_tool.py trivy "$RUNNER_TEMP/tools"
+      - name: Configure isolated scanner cache
+        run: echo "TRIVY_CACHE_DIR=$RUNNER_TEMP/source-trivy-cache" >> "$GITHUB_ENV"
+      - name: Scan source dependency manifests including upstream frontends
+        run: |
+          mkdir -p source-evidence
+          "$RUNNER_TEMP/tools/trivy" fs --scanners vuln --format json \
+            --severity HIGH,CRITICAL --exit-code 1 \
+            --output source-evidence/vulnerabilities.json .
+          python3 ci/check-scanner-db.py "$TRIVY_CACHE_DIR/db/metadata.json"
+      - name: Generate source SBOM even when vulnerabilities block the gate
+        if: always()
+        run: |
+          mkdir -p source-evidence
+          "$RUNNER_TEMP/tools/trivy" fs --format cyclonedx \
+            --output source-evidence/sbom.cdx.json .
+          cp "$TRIVY_CACHE_DIR/db/metadata.json" source-evidence/db-metadata.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: source-dependency-evidence
+          path: source-evidence/
+          retention-days: 7
+          if-no-files-found: error
+  security:
+    if: always()
+    needs: [source-controls, source-dependencies]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require both full-history and source dependency checks
+        env:
+          SOURCE_CONTROLS_RESULT: ${{ needs.source-controls.result }}
+          SOURCE_DEPENDENCIES_RESULT: ${{ needs.source-dependencies.result }}
+        run: |
+          test "$SOURCE_CONTROLS_RESULT" = success
+          test "$SOURCE_DEPENDENCIES_RESULT" = success
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04

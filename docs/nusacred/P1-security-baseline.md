@@ -158,16 +158,65 @@ Workflow tetap read-only, tanpa hak registry, sign atau deploy. Metadata standal
 hanya berlaku pada build terisolasi module; parent build tetap memerlukan review
 seluruh metadata/plugin sendiri. Temuan keamanan awal di atas tetap terbuka.
 
+## Review global dan actual runtime — kelanjutan G1
+
+[Discovery 39449623992](https://github.com/nusacred-lab/waltid-identity/actions/runs/39449623992)
+pada `784162061f2b4a42c48c1423cf303afb93f0ea45` lulus build tiga API2,
+graph guard COSE, tes mdoc, atribusi fat JAR, dan scan actual runtime melalui
+graph hasil resolusi maupun JAR langsung. Keduanya melaporkan **nol High/Critical**
+untuk masing-masing issuer, wallet dan verifier. SBOM graph berisi masing-masing
+340, 405 dan 306 artefak, dicocokkan dengan SHA-256 setiap JAR. SBOM tidak
+mengklaim menyimpan seluruh edge dependency transitif; daftar root mencakup
+seluruh artefak runtime. Ini belum scan image atau bukti alur HTTP pada image.
+
+Metadata global **1.872 komponen/3.431 hash** dan **159 lockfile** diterima
+setelah review terpisah. Dari kandidat awal 3.398 hash: 1.626 cocok dengan
+checksum repository resmi, 1.336 dengan hashing unduhan resmi, 383 dengan
+pemetaan `.module` resmi lalu hashing unduhan, 52 dengan artefak custom publisher,
+dan satu archive Kotlin/Native dengan digest aset release resmi JetBrains.
+Sebanyak 65 hash tambahan diperiksa setelah perbaikan dependency; sebagian
+menggantikan hash versi lama, sehingga jumlah final bukan 3.398 + 65.
+
+Custom serialization `1.11.1-waltid-20260811` ditelusuri ke
+[source fork `4fe61aca0dd185b0cdb920a050df81dab121cae9`](https://github.com/walt-id/kotlinx.serialization/tree/4fe61aca0dd185b0cdb920a050df81dab121cae9).
+Sebanyak 946 perbandingan file kode dari source JAR lintas target cocok setelah
+normalisasi akhir baris (common source berulang, bukan 946 file unik). Lisensi
+dan fork notice dipertahankan persis pada `ci/licenses/kotlinx-serialization`
+dan diperiksa dalam fat JAR. Tidak ditemukan attestation atau reproduksi binary;
+review ini tidak mengklaim keduanya. Perilaku CBOR khusus fork dipertahankan.
+Repository snapshot dihapus; repository release walt.id dibatasi pada versi
+serialization itu dan koordinat NFTKit legacy spesifik, bukan mirror umum.
+
+Runtime diperbaiki dengan Netty 4.1.138 pada issuer serta 4.2.18 pada
+wallet/verifier, Jackson 2.22.3/3.2.3, json-smart 2.5.2 dan PG JDBC 42.7.14.
+BC tooling 1.86 dan jose4j 0.9.6 juga dipatok. Semua hash harus mempunyai
+entri review persis pada `ci/dependency-review.json`; XML, isi lock dan inventaris
+lock yang berubah tanpa review ditolak. Jalur acceptance menjalankan Gradle
+strict, tanpa write-metadata atau auto-promotion dari bootstrap.
+
+[Discovery sebelumnya 39445432407](https://github.com/nusacred-lab/waltid-identity/actions/runs/39445432407)
+tetap **gagal**: collector salah membaca output lifecycle `buildFatJar`.
+Collector kini membaca archive `shadowJar`; kandidat parsial tanpa seluruh lock
+dari run gagal tidak diimpor. Uji negatif menolak metadata/lock berubah, lock
+baru tanpa review, runtime JAR berubah, serta fat JAR tanpa atribusi.
+
+[Acceptance strict 39451595960](https://github.com/nusacred-lab/waltid-identity/actions/runs/39451595960)
+sedang berjalan. Image/harness belum diklaim lulus. Base kandidat Temurin 21 JRE
+Ubuntu 24.04 dipatok pada manifest linux/amd64
+`sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c`;
+scan base saja melaporkan nol High/Critical pada 20 Oktober 2026, DB kurang
+dari 24 jam. Ketiga image yang dirakit tetap wajib dipindai ulang. Detail isolasi,
+fresh keys dan batas bukti tersedia pada [harness README](../../ci/harness/README.md).
+
 ## Gerbang berikutnya
 
-1. Pertahankan source COSE terpatok dan hasil kompatibilitasnya; perubahan source,
-   dependency atau hash baru memerlukan review. Jangan menerima kembali snapshot
-   tanpa verifikasi. Bukti build ketiga API2 tidak menggantikan uji image/harness.
-2. Review candidate locks/checksums serta asal seluruh artefak teresolusi dan plugin;
-   ulangi build strict setelah celah SNAPSHOT ditutup.
-3. Scan JAR/image target, hasilkan SBOM hasil resolusi dan image, ukur freshness DB.
-4. Ulangi alur credential nyata pada image fork yang sama dan rekam commit/digest.
-5. Tinjau temuan inherited satu per satu; dokumentasikan pengecualian false positive
-   yang spesifik dengan alasan, pemilik dan expiry jika memang dapat dibuktikan.
+1. Pertahankan source COSE, ledger review dan hasil kompatibilitas; dependency
+   atau hash baru memerlukan review, termasuk perubahan inventaris lock.
+2. Buktikan jalur strict tanpa perubahan metadata, termasuk tes tanpa skip.
+3. Luluskan scan image dan alur credential nyata pada image yang sama; rekam
+   source/JAR/base digest serta local image configuration digest dengan jenis
+   digest yang tepat. Tidak ada publikasi registry pada workflow ini.
+4. Tangani temuan source/frontend dan riwayat inherited satu per satu. Required
+   security harus menahan kegagalan keduanya. Tidak ada pengecualian massal.
 
 Scanner error, metadata tidak lengkap dan temuan yang belum ditangani menahan G1.

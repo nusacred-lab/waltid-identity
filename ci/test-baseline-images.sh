@@ -10,6 +10,12 @@ containers=()
 images=()
 network=''
 cleanup() {
+  status=$?
+  if [[ "$status" -ne 0 ]]; then
+    for container in "${containers[@]}"; do
+      docker inspect --format 'Runtime state: {{.State.Status}}; exit={{.State.ExitCode}}; oom={{.State.OOMKilled}}' "$container" || true
+    done
+  fi
   for container in "${containers[@]}"; do docker rm -f "$container" >/dev/null 2>&1 || true; done
   if [[ -n "$network" ]]; then docker network rm "$network" >/dev/null 2>&1 || true; fi
   for image in "${images[@]}"; do docker image rm "$image" >/dev/null 2>&1 || true; done

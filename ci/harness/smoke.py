@@ -3,7 +3,7 @@ import json
 import os
 from pathlib import Path
 import sys
-from walt import new_wallet, offer, resolve_offer, accept, session, preview, present, info
+from walt import new_wallet, offer, resolve_offer, accept, session, preview, present, info, ServiceHttpError
 
 stage = "wallet"
 try:
@@ -26,6 +26,9 @@ try:
     result = info(request["sessionId"])
     if result.get("status") != "SUCCESSFUL":
         raise ValueError("Verifier did not accept presentation")
+except ServiceHttpError as error:
+    print(f"FAIL: credential flow at {stage}; {error.service} HTTP {error.status}", file=sys.stderr)
+    sys.exit(1)
 except Exception:
     # Exception messages/response bodies may contain access-bearing protocol data.
     print("FAIL: real credential flow at stage " + stage, file=sys.stderr)

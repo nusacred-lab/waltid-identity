@@ -1,6 +1,11 @@
 """Real HTTP integration with the pinned walt.id services (no simulated responses)."""
 import json, os, urllib.request, urllib.error, urllib.parse
 PORTS={'issuer':7005,'wallet':7006,'verifier':7004}
+class ServiceHttpError(Exception):
+ def __init__(self, service, status):
+  self.service=service
+  self.status=int(status)
+  super().__init__('Service HTTP failure; response body withheld')
 def call(service,path,body=None,method=None):
  url=(os.environ.get(service.upper()+'_URL',f'http://127.0.0.1:{PORTS[service]}')+path)
  data=None if body is None else json.dumps(body).encode()
@@ -12,7 +17,7 @@ def call(service,path,body=None,method=None):
    try:return json.loads(b)
    except json.JSONDecodeError:return b
  except urllib.error.HTTPError as e:
-  raise RuntimeError(f'{service}: HTTP {e.code}; response body withheld') from None
+  raise ServiceHttpError(service,e.code) from None
 
 def new_wallet():
  w=call('wallet','/wallet',{})['walletId']
