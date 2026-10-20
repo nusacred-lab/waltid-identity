@@ -13,7 +13,17 @@ elif [[ "$mode" == verify ]]; then
 else
   echo 'Expected bootstrap or verify' >&2; exit 2
 fi
+python3 ci/verify-cose-source.py
 ./gradlew "${args[@]}" \
+ :third-party:cose-java:check \
+ verifyCoseReplacement \
  :waltid-services:waltid-issuer-api2:buildFatJar \
  :waltid-services:waltid-wallet-api2:buildFatJar \
  :waltid-services:waltid-verifier-api2:buildFatJar
+
+# These existing integration tests generate fresh issuer/device keys and exercise
+# mdoc signing, issuer chains, presentation holder binding and tamper rejection.
+./gradlew "${args[@]}" :waltid-libraries:credentials:waltid-mdoc-credentials:jvmTest \
+ --tests id.walt.mdoc.JVMMdocTest.testSigningMdlWithIssuer \
+ --tests id.walt.mdoc.JVMMdocTest.testSigningMdlWithIntermediateIssuer \
+ --tests id.walt.mdoc.JVMMdocTest.testSigningMdlWithOnlyTheIntermediateIssuerCertInX5Chain

@@ -57,7 +57,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(identityLibs.ktor.client.java)
-            implementation(identityLibs.java.cose)
+            implementation(project(":third-party:cose-java"))
             implementation(identityLibs.nimbus.jose.jwt)
         }
         jvmTest.dependencies {
@@ -84,7 +84,7 @@ kotlin {
             implementation(identityLibs.ktor.client.logging)
             implementation(identityLibs.kotlinx.coroutines.slf4j)
 
-            implementation(identityLibs.java.cose)
+            implementation(project(":third-party:cose-java"))
             implementation(identityLibs.korlibs.krypto)
 
             implementation(identityLibs.slf4j.simple)

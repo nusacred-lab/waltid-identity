@@ -34,3 +34,36 @@ tasks.withType<DependencyUpdatesTask>().configureEach {
     }
     rejectPreReleases = true
 }
+
+// Source-build all direct and transitive COSE references; never fall back to the opaque snapshot.
+subprojects {
+    configurations.configureEach {
+        resolutionStrategy.dependencySubstitution {
+            substitute(module("org.cose:cose-java")).using(project(":third-party:cose-java"))
+        }
+    }
+}
+
+tasks.register("verifyCoseReplacement") {
+    group = "verification"
+    description = "Check every API2 runtime uses the source project and no external COSE/LTS binary."
+    doLast {
+        listOf("issuer", "wallet", "verifier").forEach { service ->
+            val target = project(":waltid-services:waltid-$service-api2")
+            val components = target.configurations.getByName("runtimeClasspath")
+                .incoming.resolutionResult.allComponents.map { it.id }
+            val external = components.filterIsInstance<org.gradle.api.artifacts.component.ModuleComponentIdentifier>()
+            check(external.none { it.group == "org.cose" && it.module == "cose-java" }) {
+                "$service still resolves an external COSE binary"
+            }
+            check(components.filterIsInstance<org.gradle.api.artifacts.component.ProjectComponentIdentifier>()
+                .any { it.projectPath == ":third-party:cose-java" }) {
+                "$service does not resolve the source-built COSE project"
+            }
+            check(external.none { it.group == "org.bouncycastle" && it.module.endsWith("lts8on") }) {
+                "$service resolves duplicate BouncyCastle LTS classes"
+            }
+            println("COSE_SOURCE_PROJECT_VERIFIED: $service")
+        }
+    }
+}

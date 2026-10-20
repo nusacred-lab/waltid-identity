@@ -9,13 +9,14 @@ on:
       mode:
         description: Bootstrap only collects untrusted candidate lock/hash metadata; verify enforces reviewed metadata
         type: choice
-        options: [verify, bootstrap]
+        options: [verify, bootstrap, cose-bootstrap]
         default: verify
 permissions:
   contents: read
 jobs:
   baseline-build:
-    name: ${{ inputs.mode == 'bootstrap' && 'bootstrap-discovery' || 'baseline-acceptance' }}
+    name: ${{ inputs.mode && inputs.mode != 'verify' && 'bootstrap-discovery' || 'baseline-acceptance' }}
+    if: inputs.mode != 'cose-bootstrap'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -49,5 +50,42 @@ jobs:
         with:
           name: unreviewed-candidate-metadata
           path: candidate-metadata/
+          retention-days: 7
+          if-no-files-found: error
+
+  cose-tests:
+    name: ${{ inputs.mode && inputs.mode != 'verify' && 'cose-discovery' || 'cose-acceptance' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          distribution: temurin
+          java-version: 21.0.12+1
+      - name: Verify wrapper and exact upstream source set
+        run: |
+          echo '238e777fcddd7e34f9708186085def2abd6e08e658505b38718d79d74c21abd5  gradle/wrapper/gradle-wrapper.jar' | sha256sum -c -
+          python3 ci/verify-cose-source.py
+      - name: Test source-built COSE and reproduce its JAR
+        env:
+          COSE_MODE: ${{ inputs.mode || 'verify' }}
+          GRADLE_USER_HOME: ${{ runner.temp }}/cose-gradle-home
+        run: bash ci/test-cose.sh "$COSE_MODE"
+      - name: Collect module evidence without credential or key material
+        if: always()
+        run: |
+          mkdir -p cose-evidence
+          git rev-parse HEAD > cose-evidence/source-commit.txt
+          for path in third-party/cose-java/gradle.lockfile third-party/cose-java/gradle/verification-metadata.xml third-party/cose-java/build/libs/*.jar third-party/cose-java/build/test-results/test/*.xml third-party/cose-java/build/cose-reproducibility.json; do
+            if [ -f "$path" ]; then cp --parents "$path" cose-evidence/; fi
+          done
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: cose-source-build-evidence
+          path: cose-evidence/
           retention-days: 7
           if-no-files-found: error

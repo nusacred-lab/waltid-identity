@@ -33,6 +33,7 @@ val applications = ":waltid-applications"
 val services = ":waltid-services"
 
 val modules = listOfNotNull(
+    ":third-party:cose-java",
     * "$libraries:crypto".group(
         "waltid-crypto",
         "waltid-crypto-oci",

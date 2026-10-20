@@ -1,4 +1,7 @@
 [versions]
+# Dependencies of the source-built, pinned third-party COSE module.
+cose-cbor = "5.0.0-alpha2"
+cose-lombok = "1.18.36"
 # Build/compilation versions
 kotlin = "2.4.20"
 binary-compatibility-validator = "0.18.2"
@@ -74,7 +77,6 @@ url-encoder = "1.6.0"
 java-json-canonicalization = "1.1"
 
 # JVM-only: crypto providers
-java-cose = "1.1.1-WALT-SNAPSHOT"
 aws-kms = "1.6.97"
 azure-identity = "1.18.4"
 azure-keyvault-keys = "4.11.0"
@@ -187,6 +189,8 @@ ktor-web3login = "3.3.3"
 nftkit-web3login = "1.2311291144.0"
 
 [libraries]
+cose-cbor = { module = "com.upokecenter:cbor", version.ref = "cose-cbor" }
+cose-lombok = { module = "org.projectlombok:lombok", version.ref = "cose-lombok" }
 google-blockstore = { module = "com.google.android.gms:play-services-auth-blockstore", version = "16.4.0" }
 
 # Plugins
@@ -414,7 +418,6 @@ url-encoder = { module = "net.thauvin.erik.urlencoder:urlencoder-lib", version.r
 java-json-canonicalization = { module = "io.github.erdtman:java-json-canonicalization", version.ref = "java-json-canonicalization" }
 
 ## JVM-only: crypto providers
-java-cose = { module = "org.cose:cose-java", version.ref = "java-cose" }
 aws-kms = { module = "aws.sdk.kotlin:kms-jvm", version.ref = "aws-kms" }
 azure-identity = { module = "com.azure:azure-identity", version.ref = "azure-identity" }
 azure-keyvault-keys = { module = "com.azure:azure-security-keyvault-keys", version.ref = "azure-keyvault-keys" }
