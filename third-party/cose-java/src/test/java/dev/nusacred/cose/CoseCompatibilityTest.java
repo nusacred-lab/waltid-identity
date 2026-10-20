@@ -31,8 +31,10 @@ class CoseCompatibilityTest {
         "RSA_PSS_256", "RSA_PSS_384", "RSA_PSS_512"
     })
     void signVerifyRejectTamperingAndWrongHolder(AlgorithmID algorithm) throws Exception {
-        OneKey signer = OneKey.generateKey(algorithm);
-        OneKey other = OneKey.generateKey(algorithm);
+        // Import the serialized COSE key to initialize JCA key objects. Upstream's
+        // Ed25519 generator populates the map only; the import constructor validates it.
+        OneKey signer = new OneKey(CBORObject.DecodeFromBytes(OneKey.generateKey(algorithm).EncodeToBytes()));
+        OneKey other = new OneKey(CBORObject.DecodeFromBytes(OneKey.generateKey(algorithm).EncodeToBytes()));
         Sign1Message message = new Sign1Message();
         message.addAttribute(HeaderKeys.Algorithm, algorithm.AsCBOR(), Attribute.PROTECTED);
         message.SetContent(CONTENT);

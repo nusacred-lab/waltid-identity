@@ -4,7 +4,7 @@ mode="${1:-verify}"
 module=third-party/cose-java
 args=(-p "$module" --no-daemon --no-configuration-cache -Dorg.gradle.jvmargs=-Xmx1g)
 if [[ "$mode" == bootstrap || "$mode" == cose-bootstrap ]]; then
-  args+=(--write-locks --write-verification-metadata sha256)
+  args+=(-Pp1Bootstrap=true --write-locks --write-verification-metadata sha256)
 elif [[ "$mode" == verify ]]; then
   test -s "$module/gradle.lockfile"
   test -s "$module/gradle/verification-metadata.xml"

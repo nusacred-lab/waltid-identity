@@ -53,6 +53,12 @@ MAC tampering and malformed Sign1 input. It also builds both JARs twice with tas
 reruns and cache reuse disabled for task outputs, comparing SHA-256 and checking
 license/provenance packaging and Java 17 bytecode.
 
+Signature tests import serialized COSE keys before use, exercising key decoding as
+well as signing. The unchanged upstream Ed25519 generator fills the COSE key map
+without initializing its cached JCA keys; direct signing with that generated object
+fails. Importing it through `OneKey(CBORObject)` initializes those keys. This known
+upstream limitation is retained and must not be mistaken for a fixed generator API.
+
 `bash ci/test-cose.sh cose-bootstrap` collects candidate dependency hashes/locks
 on a temporary runner; it does not approve those hashes. The standalone settings
 file deliberately uses Maven Central only. In the parent multi-project build,

@@ -30,7 +30,10 @@ dependencies {
     testRuntimeOnly(identityLibs.junit.platform.launcher)
 }
 
-dependencyLocking { lockAllConfigurations() }
+dependencyLocking {
+    lockAllConfigurations()
+    lockMode.set(if (providers.gradleProperty("p1Bootstrap").orNull == "true") LockMode.DEFAULT else LockMode.STRICT)
+}
 
 tasks.withType<Jar>().configureEach {
     archiveBaseName.set("nusacred-cose-java")
