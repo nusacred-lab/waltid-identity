@@ -1,19 +1,30 @@
 name: Controlled baseline build
 on:
+  pull_request:
+    branches: [codex/baseline-v1.2.0]
+  push:
+    branches: [codex/baseline-v1.2.0]
   workflow_dispatch:
     inputs:
       mode:
         description: Bootstrap only collects untrusted candidate lock/hash metadata; verify enforces reviewed metadata
         type: choice
-        options: [verify, bootstrap]
+        options: [verify, bootstrap, cose-bootstrap]
         default: verify
 permissions:
   contents: read
 jobs:
-  build:
+  baseline-build:
+    needs: cose-tests
+    name: ${{ inputs.mode && inputs.mode != 'verify' && 'bootstrap-discovery' || 'baseline-acceptance' }}
+    if: ${{ always() && inputs.mode != 'cose-bootstrap' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
+      - name: Require successful COSE tests and repeatability
+        env:
+          COSE_RESULT: ${{ needs.cose-tests.result }}
+        run: test "$COSE_RESULT" = success
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
@@ -21,28 +32,81 @@ jobs:
         with:
           distribution: temurin
           java-version: |
-            17
-            21
+            17.0.20+1
+            21.0.12+1
       - name: Verify Gradle wrapper independently pinned to upstream checksums
         run: |
           echo '238e777fcddd7e34f9708186085def2abd6e08e658505b38718d79d74c21abd5  gradle/wrapper/gradle-wrapper.jar' | sha256sum -c -
           grep -Fx 'distributionSha256Sum=bafd5ce9cfaea0fbccfdc8439a1ac42fbd4cd9c89dc9a988228d8a2639a58e6c' gradle/wrapper/gradle-wrapper.properties
       - name: Build three API2 services (no publishing)
         env:
-          BUILD_MODE: ${{ inputs.mode }}
+          BUILD_MODE: ${{ inputs.mode || 'verify' }}
           GRADLE_USER_HOME: ${{ runner.temp }}/gradle-home
         run: bash ci/build-baseline.sh "$BUILD_MODE"
+      - name: Install pinned runtime scanner
+        run: python3 ci/install_tool.py trivy "$RUNNER_TEMP/tools"
+      - name: Scan actual runtime JARs and generate three SBOMs
+        run: bash ci/scan-baseline-runtime.sh "$RUNNER_TEMP/tools/trivy"
+      - name: Build and scan local images, then repeat the real credential flow
+        run: bash ci/test-baseline-images.sh "$RUNNER_TEMP/tools/trivy"
+      - name: Upload runtime evidence (no configurations or keys)
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: api2-runtime-evidence
+          path: |
+            build/baseline-evidence/*-runtime.json
+            build/baseline-evidence/reports/
+          retention-days: 7
+          if-no-files-found: warn
       - name: Collect candidate metadata, never promote it automatically
         if: always()
         shell: bash
         run: |
           mkdir -p candidate-metadata
-          find . -type f \( -name gradle.lockfile -o -name buildscript-gradle.lockfile -o -name verification-metadata.xml \) -not -path './.git/*' -exec cp --parents '{}' candidate-metadata/ \;
+          find . -type f \( -name gradle.lockfile -o -name buildscript-gradle.lockfile -o -name verification-metadata.xml \) -not -path './.git/*' -not -path './candidate-metadata/*' -exec cp --parents '{}' candidate-metadata/ \;
           git rev-parse HEAD > candidate-metadata/source-commit.txt
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: unreviewed-candidate-metadata
           path: candidate-metadata/
+          retention-days: 7
+          if-no-files-found: error
+
+  cose-tests:
+    name: ${{ inputs.mode && inputs.mode != 'verify' && 'cose-discovery' || 'cose-acceptance' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+        with:
+          distribution: temurin
+          java-version: 21.0.12+1
+      - name: Verify wrapper and exact upstream source set
+        run: |
+          echo '238e777fcddd7e34f9708186085def2abd6e08e658505b38718d79d74c21abd5  gradle/wrapper/gradle-wrapper.jar' | sha256sum -c -
+          python3 ci/verify-cose-source.py
+      - name: Test source-built COSE and reproduce its JAR
+        env:
+          COSE_MODE: ${{ inputs.mode || 'verify' }}
+          GRADLE_USER_HOME: ${{ runner.temp }}/cose-gradle-home
+        run: bash ci/test-cose.sh "$COSE_MODE"
+      - name: Collect module evidence without credential or key material
+        if: always()
+        run: |
+          mkdir -p cose-evidence
+          git rev-parse HEAD > cose-evidence/source-commit.txt
+          for path in third-party/cose-java/gradle.lockfile third-party/cose-java/gradle/verification-metadata.xml third-party/cose-java/build/libs/*.jar third-party/cose-java/build/test-results/test/*.xml third-party/cose-java/build/cose-reproducibility.json; do
+            if [ -f "$path" ]; then cp --parents "$path" cose-evidence/; fi
+          done
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: cose-source-build-evidence
+          path: cose-evidence/
           retention-days: 7
           if-no-files-found: error

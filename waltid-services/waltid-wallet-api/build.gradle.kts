@@ -94,7 +94,7 @@ dependencies {
     testImplementation(project(":waltid-services:waltid-verifier-api"))
 
     implementation(identityLibs.nimbus.jose.jwt)
-    implementation(identityLibs.java.cose)
+    implementation(project(":third-party:cose-java"))
 
     implementation(identityLibs.ktor.client.java)
 

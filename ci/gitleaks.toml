@@ -1,0 +1,3 @@
+title = "Pinned default rules; inline allow comments are disabled by the scan driver"
+[extend]
+useDefault = true

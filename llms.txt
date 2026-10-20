@@ -22,7 +22,6 @@ For protocol/concept explanations (DIDs, VCs, OID4VCI/VP flows, trust models) an
 ## Applications (waltid-applications/)
 
 - [waltid-web-wallet](https://github.com/walt-id/waltid-identity/tree/main/waltid-applications/waltid-web-wallet): reference web wallet (Vue/Nuxt). Only works with v1 servises a web wallet for v2 services is coming.
-- [waltid-web-portal2](https://github.com/walt-id/waltid-identity/tree/main/waltid-applications/waltid-web-portal2): interactive issuance/verification demo portal (Next.js), pairs with issuer-api2/verifier-api2.
 
 ## Libraries (waltid-libraries/) — build your own tooling
 

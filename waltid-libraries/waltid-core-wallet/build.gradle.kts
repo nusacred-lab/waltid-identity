@@ -35,9 +35,9 @@ kotlin {
 
             // Problematic libraries:
             implementation(identityLibs.nimbus.jose.jwt)
-            implementation(identityLibs.java.cose)
         }
         jvmMain.dependencies {
+            implementation(project(":third-party:cose-java"))
             // Ktor client
             implementation(identityLibs.ktor.client.java)
         }

@@ -33,6 +33,7 @@ val applications = ":waltid-applications"
 val services = ":waltid-services"
 
 val modules = listOfNotNull(
+    ":third-party:cose-java",
     * "$libraries:crypto".group(
         "waltid-crypto",
         "waltid-crypto-oci",
@@ -192,8 +193,12 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
 
     repositories {
-        maven("https://maven.waltid.dev/releases")
-        maven("https://maven.waltid.dev/snapshots")
+        maven("https://maven.waltid.dev/releases") {
+            content {
+                includeVersionByRegex("org\\.jetbrains\\.kotlinx", "kotlinx-serialization-.*", "1\\.11\\.1-waltid-20260811")
+                includeVersion("id.walt", "waltid-nftkit", "1.2311291144.0")
+            }
+        }
         mavenCentral()
         google()
     }

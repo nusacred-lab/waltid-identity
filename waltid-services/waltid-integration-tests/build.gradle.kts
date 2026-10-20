@@ -24,7 +24,7 @@ dependencies {
     implementation(project(":waltid-services:waltid-wallet-api"))
 
     implementation(identityLibs.nimbus.jose.jwt)
-    implementation(identityLibs.java.cose)
+    implementation(project(":third-party:cose-java"))
     implementation(identityLibs.bouncycastle.pkix)
 
     implementation(identityLibs.junit.jupiter.params)

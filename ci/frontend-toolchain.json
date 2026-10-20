@@ -1,0 +1,7 @@
+{
+  "nodeVersion": "22.23.1",
+  "npmVersion": "11.21.1",
+  "builderImage": "docker.io/library/node@sha256:175215a1f306ed5df592434b99cc2019f70624373fe49cb659240a618a846aed",
+  "platform": "linux/amd64",
+  "source": "https://github.com/nodejs/docker-node"
+}

@@ -84,7 +84,7 @@ dependencies {
     api(project(":waltid-libraries:sdjwt:waltid-sdjwt"))
 
     // crypto
-    implementation(identityLibs.java.cose)
+    implementation(project(":third-party:cose-java"))
     implementation(identityLibs.nimbus.jose.jwt)
     // Bouncy Castle
     implementation(identityLibs.bouncycastle.prov)

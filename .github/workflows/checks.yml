@@ -9,7 +9,7 @@ concurrency:
   group: checks-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  security:
+  source-controls:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -18,9 +18,98 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - run: python3 ci/check_policy.py
+      - name: Verify retained credential documentation and retired runtime scope
+        run: python3 ci/verify-catalog-scope.py
+      - run: python3 ci/install_tool.py actionlint "$RUNNER_TEMP/tools"
+      - name: Validate workflow syntax and expressions
+        run: '"$RUNNER_TEMP/tools/actionlint" -shellcheck="" -pyflakes=""'
+      - name: Verify exact non-secret checksum findings
+        run: python3 ci/verify-checksum-findings.py
       - run: python3 ci/install_tool.py gitleaks "$RUNNER_TEMP/tools"
-      - name: Scan complete Git history (redacted)
-        run: '"$RUNNER_TEMP/tools/gitleaks" git . --redact --no-banner'
+      - name: Scan full history and enforce the expiring isolated-demo policy
+        run: python3 ci/demo_history.py "$RUNNER_TEMP/tools/gitleaks"
+      - name: Prove rejection of new secrets and altered dependency inputs
+        run: python3 ci/test-supply-chain-controls.py "$RUNNER_TEMP/tools/gitleaks"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: source-control-evidence
+          path: build/source-control-evidence/
+          retention-days: 7
+          if-no-files-found: error
+  source-dependencies:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 ci/install_tool.py trivy "$RUNNER_TEMP/tools"
+      - name: Configure isolated scanner cache
+        run: echo "TRIVY_CACHE_DIR=$RUNNER_TEMP/source-trivy-cache" >> "$GITHUB_ENV"
+      - name: Scan source dependency manifests including upstream frontends
+        run: |
+          mkdir -p source-evidence
+          "$RUNNER_TEMP/tools/trivy" fs --include-dev-deps --scanners vuln --format json \
+            --severity HIGH,CRITICAL --exit-code 1 \
+            --output source-evidence/vulnerabilities.json .
+          python3 ci/check-scanner-db.py "$TRIVY_CACHE_DIR/db/metadata.json"
+      - name: Generate source SBOM even when vulnerabilities block the gate
+        if: always()
+        run: |
+          mkdir -p source-evidence
+          "$RUNNER_TEMP/tools/trivy" fs --include-dev-deps --format cyclonedx \
+            --output source-evidence/sbom.cdx.json .
+          cp "$TRIVY_CACHE_DIR/db/metadata.json" source-evidence/db-metadata.json
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: source-dependency-evidence
+          path: source-evidence/
+          retention-days: 7
+          if-no-files-found: error
+  frontend-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [waltid-digital-credentials]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 ci/verify-npm-review.py
+      - name: Install reviewed package manager and native headers
+        run: |
+          python3 ci/install-npm.py "$RUNNER_TEMP/npm-tool"
+          python3 ci/install-node-headers.py "$RUNNER_TEMP/node-headers"
+      - name: Build retained example with offline lifecycle scripts
+        env:
+          FRONTEND_APP: ${{ matrix.app }}
+        run: bash ci/test-frontends.sh "$FRONTEND_APP"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: frontend-${{ matrix.app }}-evidence
+          path: build/frontend-evidence/${{ matrix.app }}/
+          retention-days: 7
+          if-no-files-found: warn
+  security:
+    if: always()
+    needs: [source-controls, source-dependencies, frontend-build]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require source controls, dependency scans and frontend builds
+        env:
+          SOURCE_CONTROLS_RESULT: ${{ needs.source-controls.result }}
+          SOURCE_DEPENDENCIES_RESULT: ${{ needs.source-dependencies.result }}
+          FRONTEND_BUILD_RESULT: ${{ needs.frontend-build.result }}
+        run: |
+          test "$SOURCE_CONTROLS_RESULT" = success
+          test "$SOURCE_DEPENDENCIES_RESULT" = success
+          test "$FRONTEND_BUILD_RESULT" = success
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04

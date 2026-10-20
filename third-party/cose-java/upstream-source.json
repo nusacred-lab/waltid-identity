@@ -1,0 +1,108 @@
+{
+  "upstream_repository": "https://github.com/walt-id/cose-java",
+  "upstream_commit": "fc897fa9da31f35c5f2e3e092496ad1c57e10457",
+  "source_jar_sha256": "8fc17a7c02b21a2d5326853986840ad098dfc51a53b21a5f1468c001685142a3",
+  "java_source_files": 24,
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "4710dd6b065370265a80ed7355eb48b537fa1dea96c3ff6e60148d25eafca835"
+    },
+    {
+      "path": "src/main/java/org/cose/java/ASN1.java",
+      "sha256": "f8487eb3261f445deea775712b438577ff6d37212bd22261101f0812503758b9"
+    },
+    {
+      "path": "src/main/java/org/cose/java/AlgorithmID.java",
+      "sha256": "e4659ef584924882e38f3c3023c540418a09e59229f980885b474dc25540a479"
+    },
+    {
+      "path": "src/main/java/org/cose/java/Attribute.java",
+      "sha256": "5126dd1cc296dd79aec69d3f5ab672b851eff99ad16c78c94ab86cb48faf5398"
+    },
+    {
+      "path": "src/main/java/org/cose/java/CoseException.java",
+      "sha256": "52ad35e1f35a3d564054dde948edd8ad5935ea5a9a516a3b9d6f40fa8769dcbb"
+    },
+    {
+      "path": "src/main/java/org/cose/java/CounterSign.java",
+      "sha256": "4fb7e2d8e46593521f1088b926d197f4ef6dd3049fa88b90e924d27e9ea02a5c"
+    },
+    {
+      "path": "src/main/java/org/cose/java/CounterSign1.java",
+      "sha256": "375ae22f7972e9089069214851700cb5648eee90a232fe71fd7d4897cade52e7"
+    },
+    {
+      "path": "src/main/java/org/cose/java/Encrypt0Message.java",
+      "sha256": "d071cc8fb419798b446f9c706650cd18f499b54ea411ada5121a860570a7ac6c"
+    },
+    {
+      "path": "src/main/java/org/cose/java/EncryptCommon.java",
+      "sha256": "8579392daccb898c52cc56af8d2694f4ad4a18171c276665d6f9ecae5202b2ef"
+    },
+    {
+      "path": "src/main/java/org/cose/java/EncryptMessage.java",
+      "sha256": "f009efe2d2498ae832016fbd08334a6445490033e9051543e52636dfe5744461"
+    },
+    {
+      "path": "src/main/java/org/cose/java/HeaderKeys.java",
+      "sha256": "c1e2598ae84cbf7404d184d1d4ec1095543ee197d89781a9cae4c6c9f57dd95a"
+    },
+    {
+      "path": "src/main/java/org/cose/java/KeyKeys.java",
+      "sha256": "82ad9d9ba8f314cfd262914edbff6e957c26f29001422350f56803a942ac6d81"
+    },
+    {
+      "path": "src/main/java/org/cose/java/KeySet.java",
+      "sha256": "9ffcc088812ad8a36504e7240556b3735f1b9d5159e1508df2b1d9fc150228ba"
+    },
+    {
+      "path": "src/main/java/org/cose/java/KeySetCollector.java",
+      "sha256": "ceb21f2eacba8151a221a15705f07fc05916f25b745d60f6c641b4ee3ffb15dc"
+    },
+    {
+      "path": "src/main/java/org/cose/java/MAC0Message.java",
+      "sha256": "84f387fd5f1ca41c83f9bb6d1b0c993c9ee98f68502417e9b7d92df4a998926e"
+    },
+    {
+      "path": "src/main/java/org/cose/java/MACMessage.java",
+      "sha256": "ceb5371467fd9442b593a7dc1c1c6797bea208d1609ac3f654290c4edab6bde7"
+    },
+    {
+      "path": "src/main/java/org/cose/java/MacCommon.java",
+      "sha256": "5da7038a70205faf319c44529032261dfd9162c2a8e5d6025f2cbcd910ee6182"
+    },
+    {
+      "path": "src/main/java/org/cose/java/Message.java",
+      "sha256": "f3164f8d5d2b70a5e8d3225944134c472d9575468d63f35c01510431cfd5cd6c"
+    },
+    {
+      "path": "src/main/java/org/cose/java/MessageTag.java",
+      "sha256": "6affc13aef18367a32e0ed4641ef34dfece08319d7a8e79b5c4d412268545117"
+    },
+    {
+      "path": "src/main/java/org/cose/java/OneKey.java",
+      "sha256": "b0bc500fcc56e02af7c461a700f53e9b1692ba5d55364de7f86e3b0d4aa9d99e"
+    },
+    {
+      "path": "src/main/java/org/cose/java/Recipient.java",
+      "sha256": "75f13c52c0230f251801639d7fd5de0fc38797515d8344c9d8167cbba41c09d1"
+    },
+    {
+      "path": "src/main/java/org/cose/java/Sign1Message.java",
+      "sha256": "234440bc94153fdb8b6674183dc91d98b80d07f817b0439b45a6eba50bf36a1b"
+    },
+    {
+      "path": "src/main/java/org/cose/java/SignCommon.java",
+      "sha256": "451312c6acc539c0553445a44bec137b5a02209d6120b8a1d39d10c085614026"
+    },
+    {
+      "path": "src/main/java/org/cose/java/SignMessage.java",
+      "sha256": "8d2f3742e13f259fff81662cd683f94834484022432ecbf2d0c0adbd304158c0"
+    },
+    {
+      "path": "src/main/java/org/cose/java/Signer.java",
+      "sha256": "eb181297b51d45e8b84e3a9496deb4685dc1e38490dac2a86bbfec9ddd5071f2"
+    }
+  ]
+}

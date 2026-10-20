@@ -61,7 +61,7 @@ dependencies {
     implementation(identityLibs.ktor.client.java)
 
     // Crypto
-    implementation(identityLibs.java.cose)
+    implementation(project(":third-party:cose-java"))
     implementation(identityLibs.nimbus.jose.jwt)
 
     // Test

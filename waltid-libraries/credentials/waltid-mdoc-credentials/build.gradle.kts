@@ -20,7 +20,7 @@ kotlin {
             implementation(kotlin("test"))
         }
         jvmMain.dependencies {
-            implementation(identityLibs.java.cose)
+            implementation(project(":third-party:cose-java"))
         }
         jvmTest.dependencies {
             implementation(identityLibs.bouncycastle.prov)

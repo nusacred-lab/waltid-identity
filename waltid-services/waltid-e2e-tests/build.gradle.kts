@@ -24,7 +24,7 @@ dependencies {
     testImplementation(project(":waltid-services:waltid-wallet-api"))
 
     testImplementation(identityLibs.nimbus.e2e)
-    implementation(identityLibs.java.cose)
+    implementation(project(":third-party:cose-java"))
     testImplementation(identityLibs.bouncycastle.pkix)
 
     // Multiplatform / Hashes

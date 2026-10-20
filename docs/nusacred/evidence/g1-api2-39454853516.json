@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "g1Passed": false,
+  "scope": "API2 build, resolved runtime, local images and real credential protocol only; source/history security remains blocked",
+  "workflowRun": {
+    "id": 39454853516,
+    "url": "https://github.com/nusacred-lab/waltid-identity/actions/runs/39454853516",
+    "conclusion": "success"
+  },
+  "source": {
+    "pullRequestHead": "60d8c522aff10ae87537a29243ddc403ce2047b3",
+    "testedMergeCommit": "166b473c33d1087f4ddad3d0b36702852a32d565",
+    "tree": "6df6607cb3f6e2d7debf11fcd2685ee5a20c1da8",
+    "headAndMergeTreesEqual": true
+  },
+  "artifact": {
+    "id": 12280556765,
+    "name": "api2-runtime-evidence",
+    "githubReportedDigest": "sha256:c795affc77ea704c63a51a25caa827f6b3df003341f9c9d38add0c3d0117a45e",
+    "retentionDays": 7
+  },
+  "tests": {
+    "cose": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "mdoc": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "credentialFlow": {
+    "schemaVersion": 1,
+    "syntheticData": true,
+    "realHttpServices": true,
+    "issuance": "passed",
+    "walletStorage": "passed",
+    "preview": "passed",
+    "holderBoundPresentation": "passed",
+    "verification": "passed"
+  },
+  "images": [
+    {
+      "service": "issuer",
+      "sourceCommit": "166b473c33d1087f4ddad3d0b36702852a32d565",
+      "localImageConfigDigest": "sha256:e7f5f8cacffb49c824ab12e716fbf35e2f8b1f8a57dd62874f3c00be7b12ba09",
+      "registryPublished": false,
+      "basePlatformManifestDigest": "sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c",
+      "fatJarSha256": "15c30f1a4ebca851543647ba9b0c6c9c9df8d3cc250995557e06a0ff1e771d29",
+      "highCriticalVulnerabilities": 0
+    },
+    {
+      "service": "wallet",
+      "sourceCommit": "166b473c33d1087f4ddad3d0b36702852a32d565",
+      "localImageConfigDigest": "sha256:4aba42984e2604ca125937ea383a7af1009c9964ff6afaafc71c4c74a4970391",
+      "registryPublished": false,
+      "basePlatformManifestDigest": "sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c",
+      "fatJarSha256": "cd6b0c34246acc663fa6d8c90ba5132ad2983cf8b749b07fe28496267c121a61",
+      "highCriticalVulnerabilities": 0
+    },
+    {
+      "service": "verifier",
+      "sourceCommit": "166b473c33d1087f4ddad3d0b36702852a32d565",
+      "localImageConfigDigest": "sha256:be2d9124060b2a19f905c508fad3ea77135302aaf90ef525d8ab79a27d23d079",
+      "registryPublished": false,
+      "basePlatformManifestDigest": "sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c",
+      "fatJarSha256": "e0e00d72929992abaa08bd9a4c462e42f36dc22b13727b9500bf82ab64a42836",
+      "highCriticalVulnerabilities": 0
+    }
+  ],
+  "evidenceFileSha256": {
+    "issuer-runtime.json": "0cc9eb5ebee765f2e83b524573d6bded835b1d637ba7564881749d84635d9526",
+    "reports/credential-harness.json": "4cc392ec71d13cc5cfad995573ca4d2e4c7f52c1d12506c2232f991b21316b91",
+    "reports/images-tested.json": "09f34455c3ba61738f3dd89e1fad247ca1cf34cf5bab65d3fea90f182b99ed67",
+    "reports/issuer-image-sbom.cdx.json": "3d861171f651416e0b0ddaf3992209b4dabcfa0bdbf2bd391387a584eac6f2e3",
+    "reports/issuer-image-vulnerabilities.json": "2b65020022f1be0370172fa956f4ba32b2feaba1b06b9f8273a9eeda9d047339",
+    "reports/issuer-resolved-sbom.cdx.json": "7cc595bea720ef3343d88a18bce97ae3396445dd5ced4c7cba05b733ce7d025e",
+    "reports/issuer-resolved-vulnerabilities.json": "09fe76745193bf7ccc1798666f4c66221099a3fd1236827526181e59e5858ffa",
+    "reports/issuer-sbom.cdx.json": "f550e848ee1eb21902be91d6519745849c34c77533830cbfeee84dd574a1f737",
+    "reports/issuer-vulnerabilities.json": "6c2f39e46ece5763cc6244c71bcf0c390b3325797e0e300ef9fa0f318a2d03a0",
+    "reports/test-results.json": "95125e96e2704df182ac2154f7e47878730ee4155bb0a2387fdd24dbbbd6c06d",
+    "reports/trivy-db-metadata.json": "93c8cfcacf9d116fcce1107acee25fbeaa6d2af038ea1226dd603955097c0d73",
+    "reports/verifier-image-sbom.cdx.json": "669cf6ba7708f2658cf7e8c60254f3291bc8213a38ea321ae954731023e8fe35",
+    "reports/verifier-image-vulnerabilities.json": "02d7fd5c210177ee186200a32e8ac0cd65cf05a39f091aa5ee9a773aba1f01d6",
+    "reports/verifier-resolved-sbom.cdx.json": "abe670004866e7dcd50c0164e98ae123134a42fbeded814906a708a45ba7d809",
+    "reports/verifier-resolved-vulnerabilities.json": "a52bb7418bc24569a625ef87dbe4871dc95d00bbef2337622d9535b2ee4aff8d",
+    "reports/verifier-sbom.cdx.json": "06b346ec1126edf3df607edb97b7a3e86d8a494de6a1166bcbcfca46e4757bd4",
+    "reports/verifier-vulnerabilities.json": "e6c03c0b1cb2c121107a39a0a1ce914f4e3db4a19e498eb0c3a40b879f1d8fa8",
+    "reports/wallet-image-sbom.cdx.json": "7cc6591faf1dfc9872a6727ea1ce9026560c525e9b5373ad92ad7a322ecfa75a",
+    "reports/wallet-image-vulnerabilities.json": "2aef063ed73a3999cc515a21094747b40aa1b4524db8a8cf86a75df9c83a88b9",
+    "reports/wallet-resolved-sbom.cdx.json": "1cc2b035432fc8252eaf6a819fcb867769c050b1bd4f4ef96162db19f2517f93",
+    "reports/wallet-resolved-vulnerabilities.json": "87351b39465f4bc543d519bfe6a2743466078103fecb0c5d9132b3f382745348",
+    "reports/wallet-sbom.cdx.json": "526ce91263c0eb641abafaf414ae224ef2f1a2773552a32d4576f0caa55302f7",
+    "reports/wallet-vulnerabilities.json": "f415d5c9a3d165827eee15659636965df261c2ad34778f92f28e9b70094afd3c",
+    "verifier-runtime.json": "256cac29878f6562a0d3c7d367007af49bb33d31193cac6746adcf3378a4358e",
+    "wallet-runtime.json": "b6e686bfdd74a663f5f2585f40cc8dd6e3d529cccc7660b650cd628e7d2c571d"
+  }
+}

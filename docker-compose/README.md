@@ -1,3 +1,10 @@
+> Fork scope change (2026-10-21): `web-portal2` and `vc-repo` were retired.
+> Their Compose services, proxy listeners and published ports are removed.
+> There is no local credential catalog JSON API or Nuxt demo portal. Other
+> inherited examples may mention the original upstream service layout below;
+> they are historical references, not the Nusacred deployment plan. See
+> [retained scope](../ci/FRONTEND-BASELINE.md).
+
 # walt.id Identity Docker Environment
 
 This directory contains the Docker Compose configuration that sets up and runs the services and applications of the
@@ -134,15 +141,15 @@ will start automatically:
 profiles to start the services for. The services are available with the following profiles:
 
 - **identity** - the current stack implementing the final v1 protocols (issuer-api2, verifier-api2, wallet-api2,
-  web-portal2, wallet-demo-compose-web). wallet-api2 has the `auth` feature enabled (email/password JWT; see
+  wallet-demo-compose-web). wallet-api2 has the `auth` feature enabled (email/password JWT; see
   `wallet-api2/config/auth.conf`). The published `stable` tag (0.23.0) cannot load that auth config; use `latest`
   or a locally built `1.0.0-SNAPSHOT` image for wallet-api2 when auth is on. The Compose web wallet image is
   built from source (`docker compose build wallet-demo-compose-web`) until a matching tag is published.
 - **identity-old** - the original stack implementing the draft protocols (wallet-api, issuer-api, verifier-api,
-  waltid-demo-wallet, waltid-dev-wallet, web-portal, vc-repo)
-- **services** - for API services of both stacks (wallet-api, issuer-api, verifier-api, vc-repo, issuer-api2,
+  waltid-demo-wallet, waltid-dev-wallet, web-portal)
+- **services** - for API services of both stacks (wallet-api, issuer-api, verifier-api, issuer-api2,
   verifier-api2, wallet-api2)
-- **apps** - for web applications of both stacks (waltid-demo-wallet, waltid-dev-wallet, web-portal, web-portal2,
+- **apps** - for web applications of both stacks (waltid-demo-wallet, waltid-dev-wallet, web-portal,
   wallet-demo-compose-web)
 - **valkey** - for the Valkey/Redis service (required when using valkey for session storage in wallet-api)
 - **tse** - for the Hashicorp vault service, will be initialized with:
@@ -249,8 +256,7 @@ This value will be used by reverse proxy (and services configs, if any).
 - browse `.env` file
 - update `PUBLIC_SERVICE_HOST` if browser-facing app URLs should not use `localhost`
 
-This value is used for public frontend configuration such as web-portal2 issuer2, verifier2, and wallet URLs,
-and the Compose web wallet's wallet-api2 base URL.
+This value configures the Compose web wallet's public wallet-api2 base URL.
 
 ### Select an identity stack version
 
