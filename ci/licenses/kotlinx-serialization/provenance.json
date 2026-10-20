@@ -1,0 +1,11 @@
+{
+  "sourceRepository": "https://github.com/walt-id/kotlinx.serialization",
+  "commit": "4fe61aca0dd185b0cdb920a050df81dab121cae9",
+  "version": "1.11.1-waltid-20260811",
+  "files": {
+    "LICENSE.txt": "c5accbbd8546e94c34aed24afe689a617627d18eed5a6c48277e48db57c23851",
+    "WALTID-FORK-NOTICE.md": "e104e4bf5954db32876039765335b4e4660f473618a019b0632fd134201c146d",
+    "license/LICENSE.txt": "0eec219eba99cd8da85c3c781732a515fba284c55e9531739f11762c80a754b4",
+    "license/NOTICE.txt": "ec77bba5c852830abfdefcdefbf4a22577ff4df79ec323a898d5100ca1d6f8d6"
+  }
+}

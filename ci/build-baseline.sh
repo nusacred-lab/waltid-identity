@@ -9,6 +9,7 @@ elif [[ "$mode" == verify ]]; then
     echo 'Reviewed verification metadata and build-logic lock are required; bootstrap output must be reviewed first.' >&2
     exit 1
   fi
+  python3 ci/verify-dependency-review.py
   args+=(--dependency-verification strict)
 else
   echo 'Expected bootstrap or verify' >&2; exit 2

@@ -2,3 +2,4 @@
 # Preserve byte-exact vendored source/license for provenance checks, including upstream whitespace.
 third-party/cose-java/src/main/java/** -text whitespace=-blank-at-eol,-blank-at-eof
 third-party/cose-java/LICENSE -text whitespace=-blank-at-eol,-blank-at-eof
+ci/licenses/kotlinx-serialization/** -text whitespace=-blank-at-eol,-blank-at-eof

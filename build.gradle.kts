@@ -98,8 +98,8 @@ tasks.register("collectBaselineRuntimeEvidence") {
                     mapOf("component" to artifact.id.componentIdentifier.displayName,
                         "file" to artifact.file.name, "sha256" to hash)
                 }
-            val fatJars = target.tasks.named("buildFatJar").get().outputs.files.files
-                .filter { it.isFile && it.extension == "jar" }.map { file ->
+            val fatJars = listOf(target.tasks.named("shadowJar", org.gradle.jvm.tasks.Jar::class.java)
+                .get().archiveFile.get().asFile).map { file ->
                     val destination = output.resolve("fat-jars/$service.jar")
                     destination.parentFile.mkdirs()
                     file.copyTo(destination, overwrite = true)
@@ -112,6 +112,19 @@ tasks.register("collectBaselineRuntimeEvidence") {
             output.resolve("$service-runtime.json").writeText(
                 groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(manifest)) + "\n")
             println("BASELINE_RUNTIME_EXPORTED: $service (${artifacts.size} artifacts)")
+        }
+    }
+}
+
+// Retain the custom serialization fork's license and attribution in distributable fat JARs.
+subprojects {
+    if (name in setOf("waltid-issuer-api2", "waltid-wallet-api2", "waltid-verifier-api2")) {
+        tasks.withType<org.gradle.jvm.tasks.Jar>().configureEach {
+            if (name == "shadowJar") {
+                from(rootProject.file("ci/licenses/kotlinx-serialization")) {
+                    into("META-INF/licenses/waltid-kotlinx-serialization")
+                }
+            }
         }
     }
 }
