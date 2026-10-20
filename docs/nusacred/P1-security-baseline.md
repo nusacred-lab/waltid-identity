@@ -123,7 +123,7 @@ Lihat [keputusan dan keterbatasan module](../../third-party/cose-java/README.md)
 
 [Discovery COSE](https://github.com/nusacred-lab/waltid-identity/actions/runs/39439984065)
 meluluskan 13 tes tanpa skip dan menghasilkan binary/source JAR yang identik pada
-dua build ulang dengan cache task dinonaktifkan. [CI PR strict](https://github.com/nusacred-lab/waltid-identity/actions/runs/39440757635)
+dua build ulang dengan cache task dinonaktifkan. [CI PR strict](https://github.com/nusacred-lab/waltid-identity/actions/runs/39441236360/job/118691321626)
 kemudian meluluskan job `cose-acceptance`, memakai dependency verification strict
 serta locking strict tanpa menulis checksum baru. Run keseluruhan tetap gagal
 pada gerbang baseline karena metadata global belum diterima; hasil job COSE saja
@@ -140,6 +140,18 @@ tetapi tidak menginisialisasi cached JCA key. Tes mengimpor serialized COSE key
 melalui constructor yang memvalidasi/menginisialisasi key, lalu menguji tanda
 tangan dan penolakan key lain/tamper. Bug generator langsung tidak diklaim selesai.
 
+[Integrasi source COSE](https://github.com/nusacred-lab/waltid-identity/actions/runs/39440113754)
+pada commit `78cb982f0181c997721846666c2331725d35dbaf` berhasil, durasi job
+15 menit 43 detik. Ketiga fat JAR API2 dibangun, `verifyCoseReplacement`
+meluluskan graph issuer/wallet/verifier tanpa binary COSE eksternal atau BC LTS,
+dan tiga skenario fresh-key JVMMdocTest lulus (issuer, intermediate issuer, serta
+intermediate issuer pada x5chain). Skenario itu mencakup issuance, content tamper
+rejection dan presentasi dengan tanda tangan perangkat. Ini bukan uji HTTP atau
+harness credential pada image. Metadata global hasil bootstrap tetap kandidat;
+keberhasilan bootstrap tidak menggantikan gerbang strict. Perubahan setelah run
+ini hanya menyentuh metadata/settings standalone, gerbang CI, pemeriksa manifest
+dan dokumentasi; source produksi serta dependency parent build tetap sama.
+
 Gerbang baseline bergantung pada hasil tes/repeatability COSE. Kegagalan job COSE
 harus membuat required baseline check gagal secara eksplisit, bukan hanya skipped.
 Workflow tetap read-only, tanpa hak registry, sign atau deploy. Metadata standalone
@@ -150,7 +162,7 @@ seluruh metadata/plugin sendiri. Temuan keamanan awal di atas tetap terbuka.
 
 1. Pertahankan source COSE terpatok dan hasil kompatibilitasnya; perubahan source,
    dependency atau hash baru memerlukan review. Jangan menerima kembali snapshot
-   tanpa verifikasi. Selesaikan bukti integrasi ke seluruh target API2.
+   tanpa verifikasi. Bukti build ketiga API2 tidak menggantikan uji image/harness.
 2. Review candidate locks/checksums serta asal seluruh artefak teresolusi dan plugin;
    ulangi build strict setelah celah SNAPSHOT ditutup.
 3. Scan JAR/image target, hasilkan SBOM hasil resolusi dan image, ukur freshness DB.
