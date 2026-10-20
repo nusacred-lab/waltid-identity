@@ -1,69 +1,55 @@
-# Inherited frontend dependency remediation
+# Retained frontend and catalog scope
 
-These checks cover upstream documentation/examples included by the complete
-source scan. The project product UI milestones continue to use the planned
-Compose Web/Wasm portal and Android application.
+On 2026-10-21 the unused Nuxt demo portal (`waltid-web-portal2`) and the
+Nuxt runtime of `waltid-credentials` were retired from this fork. The Nusacred
+product clients are the planned Compose Web/Wasm portal and Android APK.
+Neither retired frontend is required by the three API2 services or the real
+HTTP credential acceptance harness. This removes unsupported examples and their
+deployment targets; it does not claim that their vulnerabilities were patched.
 
-The three npm graphs use strict peer validation. The previous
-`legacy-peer-deps=true` setting was removed after fresh strict resolution passed.
-Nuxt remains on the patched 3.x family. The credentials documentation migrates
-Content 2 to Content 3 to replace the vulnerable MDC parser, and Image 1 to Image
-2 to replace the vulnerable sharp dependency. The collection retains
-`src/content`, the page renderer uses the official collection query API, and
-the existing syntax theme/languages are retained with the new configuration.
-Navigation, surrounding pages, table of contents and server JSON routes also
-use the Content 3 APIs. The already-reviewed Minimark codec converts its stored
-AST for JSON extraction instead of introducing a new Markdown parser.
+The dependency-parent review found official current listhen 1.10.1 still requires
+node-forge ^1.4.0; micromatch 4.0.8 and fast-glob 3.3.3 still lead to braces ^3.0.3.
+Content 3.16.2 also requires micromatch, so upgrading Nuxt alone cannot remove all
+paths. Official npm latest versions observed on 2026-10-21 remain node-forge
+1.4.0 and braces 3.0.3. No local crypto patch, package identity rewrite, CVE waiver
+or scanner directory exclusion is used.
 
-Sources used for the migration:
+Compatibility changes:
 
-- [Content migration](https://content.nuxt.com/docs/getting-started/migration)
-- [Collection sources](https://content.nuxt.com/docs/collections/sources)
-- [Highlight configuration](https://content.nuxt.com/docs/getting-started/configuration)
-- [Image 2 migration](https://github.com/nuxt/image/releases/tag/v2.0.0)
+- The Nuxt interactive demo portal is no longer supplied or deployable.
+- The credential catalog is source-only. All 56 Markdown/navigation/asset files
+  under its src/content and src/public retain their exact bytes and paths.
+  credential-catalog-source.json and verify-catalog-scope.py compare their complete
+  inventory and bytes against immutable pre-retirement commit
+  51daa3381dfb434265572c33c8f0ac5fd3687df0.
+- Catalog SSR and its list/credential JSON/mapping/manifest routes no longer
+  exist. Historical endpoint descriptions in preserved documentation are
+  references, not a promise of local service. API2 credential definitions are
+  embedded in service configuration; acceptance must prove issuance/verification
+  without either frontend.
+- Inherited example Compose services web-portal2 and vc-repo, their proxy listeners
+  and published ports are removed. Imported deployment workflows stay quarantined;
+  their historical references do not deploy here.
+- No product APK or Compose portal is claimed implemented by this removal.
 
-Before accepting the lockfiles, all **1,270 distinct registry archives** were
-downloaded separately, matched to both lock SHA-512 and official npm version
-metadata, and checked for package identity. Two bundled component occurrences
-are covered by their parent archive and inspected package manifests.
-DefinitelyTyped archives use different root directory names; the review requires
-one unambiguous root package manifest and the same registry name/version/hash.
-The ledger records integrity consistency. Publisher build attestations and
-registry signatures have not been verified.
+The previous Nuxt security migration built and tested successfully before
+retirement (baseline 39469433273 and checks 39469433322), but left four High
+findings in the two unused graphs. Previous source and archive review evidence
+remain in Git history; complete-history secret scanning is not shortened.
 
-`verify-npm-review.py` rejects changed manifests, unreviewed archives and changed
-bundled versions. Its negative checks were exercised on private copies, including
-an unknown archive whose lock-file checksum was deliberately updated: the
-missing per-archive review still caused rejection.
+The remaining waltid-digital-credentials example retains its existing lock graph,
+with 65 distinct npm archives already reviewed by separate downloads, registry
+metadata/SHA-512 and package identity checks. The ledger is exactly the subset
+used by this graph; no new hashes are accepted. Bundled components remain bound
+to their reviewed parent archive. This establishes integrity consistency, not
+publisher build attestation or source audit.
 
-CI uses the official Node 22.23.1 Debian builder at the exact linux/amd64 manifest
-in `frontend-toolchain.json`. The npm 11.21.1 archive and Node native headers have
-separately checked hashes in `tools.json`. npm 10 encountered an internal Arborist
-error during resolution; npm 11 completed all three graphs with strict peer
-checking. Resolver failure was never treated as acceptance.
+CI retains strict peers, pinned Node 22.23.1/npm 11.21.1/header hashes and an exact
+official builder image. Installation disables lifecycle scripts; rebuild/build
+execute without network, root, extra capabilities or a writable root filesystem.
+The retained example must build. Removed application tests retire with their
+implementations; a source-preservation/scope check guards the documented change.
+Source SCA still scans the entire current tree including development dependencies.
 
-The networked container installs packages with all lifecycle scripts disabled.
-Rebuild, native compilation, application build and documentation HTTP tests then
-run in a separate container with **no network**. Verified Node headers are
-provided locally and source builds are requested for native lifecycle compilation.
-Platform binaries already included in reviewed npm archives retain those archive
-hash guarantees. No additional binary download is allowed to succeed during
-package scripts. Containers run without root, extra
-capabilities or privilege escalation; only disposable source copies and reviewed
-tool directories are mounted. Raw package/build logs are withheld. Evidence
-contains fixed-schema outcomes and failure categories.
-
-Documentation regression checks require real SSR output for the root and a
-nested mdoc page, including headings, navigation, surrounding links and TOC,
-plus HTTP 404 for a missing page. Three credential JSON APIs must list and
-return data matching the original Markdown fixtures and reject unknown names.
-Mapping/manifest extraction uses a versioned synthetic Markdown fixture overlaid
-only in the disposable test copy; evidence identifies that overlay. The actual
-HTTP handlers and parser run against it. The other two upstream apps must
-compile. These jobs must pass before the frontend changes are accepted.
-
-As of 2026-10-20, local source scanning including development dependencies still
-reports `CVE-2026-85393` in `node-forge` 1.4.0 and `CVE-2026-93687` in `braces`
-3.0.3 in both Nuxt graphs. These remain the latest official registry releases
-observed during review. No CVE waiver or CVE ignore is added. Full-history findings
-also remain open; **G1 stays blocked** until the remaining security work passes.
+Full-history secret findings remain an independent blocker. Application removal
+does not resolve historical credentials or establish that G1 has passed.

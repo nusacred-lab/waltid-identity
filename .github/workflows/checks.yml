@@ -18,6 +18,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - run: python3 ci/check_policy.py
+      - name: Verify retained credential documentation and retired runtime scope
+        run: python3 ci/verify-catalog-scope.py
       - run: python3 ci/install_tool.py actionlint "$RUNNER_TEMP/tools"
       - name: Validate workflow syntax and expressions
         run: '"$RUNNER_TEMP/tools/actionlint" -shellcheck="" -pyflakes=""'
@@ -63,7 +65,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [waltid-credentials, waltid-web-portal2, waltid-digital-credentials]
+        app: [waltid-digital-credentials]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -73,7 +75,7 @@ jobs:
         run: |
           python3 ci/install-npm.py "$RUNNER_TEMP/npm-tool"
           python3 ci/install-node-headers.py "$RUNNER_TEMP/node-headers"
-      - name: Build with offline lifecycle scripts and test documentation SSR
+      - name: Build retained example with offline lifecycle scripts
         env:
           FRONTEND_APP: ${{ matrix.app }}
         run: bash ci/test-frontends.sh "$FRONTEND_APP"

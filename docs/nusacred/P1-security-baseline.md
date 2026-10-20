@@ -290,3 +290,21 @@ menerapkan exception CVE atau allowlist direktori/riwayat baseline.
    security harus menahan kegagalan keduanya. Tidak ada pengecualian massal.
 
 Scanner error, metadata tidak lengkap dan temuan yang belum ditangani menahan G1.
+
+## Scope remediation — 21 October 2026
+
+The two unused Nuxt runtimes and their deployment targets have been retired;
+credential Markdown/navigation/assets remain byte-exact source references. The
+API2 runtime and planned Compose/Android product clients do not depend on them.
+See [scope, compatibility losses and preservation checks](../../ci/FRONTEND-BASELINE.md).
+This removes vulnerable dependency graphs rather than claiming upstream CVEs
+fixed or adding CVE exceptions. The retained example uses 65 already-reviewed
+npm archives. The complete current-tree source scan, including development
+packages, reports zero High/Critical locally; final CI and real API2 image
+acceptance must still confirm the revised commit.
+
+Full Git history is unchanged. Prioritized private triage found unconfirmed AWS
+credential material and an Azure client secret previously used by code making
+real token requests. Neither revocation nor fixture status is established. No
+provider authentication is attempted; values remain private. History checks
+must remain blocked pending evidence. No exception or mass allowlist is granted.

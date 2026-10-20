@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-apps = ("waltid-credentials", "waltid-web-portal2", "waltid-digital-credentials")
+apps = ("waltid-digital-credentials",)
 ledger = json.loads(Path("ci/npm-dependency-review.json").read_text())
 
 def require(condition, message):
@@ -49,5 +49,5 @@ for app in apps:
         actual_name = unquote(urlparse(item["resolved"]).path.lstrip("/").split("/-/")[0])
         require((review["name"], review["version"]) == (actual_name, item["version"]), "npm component identity changed")
         expected.add(key)
-require(set(reviewed) == expected, "npm review must exactly match all three frontend lock inventories")
-print(f"PASS: {len(reviewed)} independently downloaded npm archives and three frontend manifest sets match")
+require(set(reviewed) == expected, "npm review must exactly match the retained frontend lock inventory")
+print(f"PASS: {len(reviewed)} independently downloaded npm archives and the retained frontend manifest set match")

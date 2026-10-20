@@ -1,3 +1,10 @@
+> Fork scope change (2026-10-21): `web-portal2` and `vc-repo` were retired.
+> Their Compose services, proxy listeners and published ports are removed.
+> There is no local credential catalog JSON API or Nuxt demo portal. Other
+> inherited examples may mention the original upstream service layout below;
+> they are historical references, not the Nusacred deployment plan. See
+> [retained scope](../ci/FRONTEND-BASELINE.md).
+
 # walt.id Identity Docker Environment
 
 This directory contains the Docker Compose configuration that sets up and runs the services and applications of the

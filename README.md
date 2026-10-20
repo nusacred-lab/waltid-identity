@@ -1,3 +1,10 @@
+> Nusacred fork scope: the inherited Nuxt demo portal and hosted credential
+> catalog have been retired. Catalog Markdown/assets remain under
+> `waltid-applications/waltid-credentials` as source reference only. See
+> [scope and compatibility](ci/FRONTEND-BASELINE.md). Product clients remain
+> the planned Compose Web/Wasm portal and Android APK; API2 acceptance uses
+> real HTTP services. Upstream links below describe upstream capabilities.
+
 <div align="center">
 <img src="assets/walt-banner.png" alt="walt.id banner" />
 

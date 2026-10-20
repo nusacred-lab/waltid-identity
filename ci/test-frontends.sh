@@ -2,7 +2,7 @@
 set -euo pipefail
 frontend_app="$1"
 case "$frontend_app" in
-  waltid-credentials|waltid-web-portal2|waltid-digital-credentials) ;;
+  waltid-digital-credentials) ;;
   *) echo 'Unknown frontend' >&2; exit 2;;
 esac
 test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
@@ -27,11 +27,6 @@ import shutil, sys
 source = Path('waltid-applications') / sys.argv[1]
 shutil.copytree(source, sys.argv[2], symlinks=True,
                 ignore=shutil.ignore_patterns('node_modules', '.nuxt', '.output', '.data', '.git'))
-if sys.argv[1] == 'waltid-credentials':
-    # This versioned synthetic fixture exercises optional JSON API sections;
-    # it is overlaid only in the disposable test copy, not the application source.
-    target = Path(sys.argv[2]) / 'src/content/3.w3c-credentials/g1-contract-fixture.md'
-    shutil.copyfile('ci/fixtures/content-contract.md', target)
 PYTHON
 frontend_builder="$(python3 -c 'import json; print(json.load(open("ci/frontend-toolchain.json"))["builderImage"])')"
 run_stage() {
@@ -48,7 +43,6 @@ run_stage() {
     --mount "type=bind,source=$frontend_private/work,target=/work" \
     --mount "type=bind,source=$RUNNER_TEMP/npm-tool,target=/npm-tool,readonly" \
     --mount "type=bind,source=$RUNNER_TEMP/node-headers/node-v22.23.1,target=/node-headers,readonly" \
-    --mount "type=bind,source=$PWD/ci/frontend-docs-smoke.mjs,target=/checks/frontend-docs-smoke.mjs,readonly" \
     --mount "type=bind,source=$frontend_evidence,target=/evidence" \
     --workdir /work --entrypoint /bin/sh "$frontend_builder" -ec "$frontend_command")"
   frontend_containers+=("$frontend_container")
@@ -72,9 +66,6 @@ run_stage install bridge '
 run_stage build none '
   npm rebuild --offline --foreground-scripts
   npm run build --offline
-  if [ "$FRONTEND_APP" = waltid-credentials ]; then
-    node /checks/frontend-docs-smoke.mjs
-  fi
 '
 python3 - "$frontend_app" "$frontend_evidence" <<'PYTHON'
 import hashlib, json, os, pathlib, sys
@@ -86,7 +77,7 @@ record = dict(schemaVersion=1, app=app, sourceCommit=os.environ['GITHUB_SHA'],
               nodeVersion=toolchain['nodeVersion'], npmVersion=toolchain['npmVersion'],
               builderImage=toolchain['builderImage'], peerValidation='strict',
               lifecycleScriptsDisabledDuringInstall=True, networkDisabledDuringScriptsAndBuild=True,
-              syntheticDocumentationFixture=app == 'waltid-credentials',
+              syntheticDocumentationFixture=False,
               build='passed', productionDeployed=False)
 (pathlib.Path(destination) / 'build.json').write_text(json.dumps(record, indent=2) + '\n')
 PYTHON

@@ -162,41 +162,12 @@ services:
     depends_on:
       - caddy
     environment:
-      NEXT_PUBLIC_VC_REPO: "http://$SERVICE_HOST:$VC_REPO_PORT"
       NEXT_PUBLIC_ISSUER: "http://$SERVICE_HOST:$ISSUER_API_PORT"
       NEXT_PUBLIC_VERIFIER: "http://$SERVICE_HOST:$VERIFIER_API_PORT"
       NEXT_PUBLIC_VERIFIER2: "http://$SERVICE_HOST:$VERIFIER_API2_PORT"
       NEXT_PUBLIC_WALLET: "http://$SERVICE_HOST:$DEMO_WALLET_FRONTEND_PORT"
       PORT: $WEB_PORTAL_PORT
 
-  web-portal2:
-    image: ${IMAGE_PREFIX}waltid/portal2:${VERSION_TAG:-latest}
-    profiles:
-      - apps
-      - identity
-      - all
-    pull_policy: missing
-    build:
-      context: ../
-      dockerfile: waltid-applications/waltid-web-portal2/Dockerfile
-    depends_on:
-      # The api2 services are not part of the apps profile, so they may not be enabled
-      issuer-api2:
-        condition: service_started
-        required: false
-      verifier-api2:
-        condition: service_started
-        required: false
-      caddy:
-        condition: service_started
-    environment:
-      NUXT_PUBLIC_ISSUER_BASE: "http://$PUBLIC_SERVICE_HOST:$ISSUER_API2_PORT"
-      NUXT_PUBLIC_VERIFIER_BASE: "http://$PUBLIC_SERVICE_HOST:$VERIFIER_API2_PORT"
-      NUXT_PUBLIC_WALLET_URL: "http://$PUBLIC_SERVICE_HOST:$WALLET_DEMO_COMPOSE_WEB_PORT"
-      NUXT_PUBLIC_VERIFIER_KEY_JWK: "$WEB_PORTAL2_VERIFIER_KEY_JWK"
-      NUXT_PUBLIC_VERIFIER_X5C: "$WEB_PORTAL2_VERIFIER_X5C"
-      NUXT_PUBLIC_VERIFIER_CLIENT_ID: "$WEB_PORTAL2_VERIFIER_CLIENT_ID"
-      PORT: $WEB_PORTAL2_PORT
 
   wallet-demo-compose-web:
     image: ${IMAGE_PREFIX}waltid/wallet-demo-compose-web:${VERSION_TAG:-latest}
@@ -224,20 +195,6 @@ services:
       WALLET_BRAND_PRIMARY_CONTAINER: "$WALLET_BRAND_PRIMARY_CONTAINER"
       WALLET_BRAND_ON_PRIMARY_CONTAINER: "$WALLET_BRAND_ON_PRIMARY_CONTAINER"
 
-  vc-repo:
-    platform: linux/amd64
-    image: ${IMAGE_PREFIX}waltid/vc-repository:${VERSION_VC_REPO:-latest}
-    profiles:
-      - services
-      - identity-old
-      - all
-    pull_policy: missing
-    build:
-      context: ../waltid-applications/waltid-credentials/.
-    depends_on:
-      - caddy
-    environment:
-      PORT: $VC_REPO_PORT
 
   valkey:
     image: valkey/valkey:${VERSION_VALKEY:-7.2}
@@ -380,20 +337,12 @@ services:
         protocol: tcp
         mode: host
 
-      - target: "$WEB_PORTAL2_PORT"
-        published: $WEB_PORTAL2_PORT # web-portal2
-        protocol: tcp
-        mode: host
 
       - target: "$WALLET_DEMO_COMPOSE_WEB_PORT"
         published: $WALLET_DEMO_COMPOSE_WEB_PORT # wallet-demo-compose-web
         protocol: tcp
         mode: host
 
-      - target: "$VC_REPO_PORT"
-        published: $VC_REPO_PORT # vc-repo
-        protocol: tcp
-        mode: host
 
       - target: "$PG_ADMIN_PORT"
         published: $PG_ADMIN_PORT # pg-admin
