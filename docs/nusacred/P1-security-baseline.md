@@ -76,7 +76,20 @@ classpath tiga API2. Hasil resolusi build tetap menjadi penentu akhirnya.
 Repository deklaratif: Maven Central, Google, Gradle Plugin Portal,
 `https://maven.waltid.dev/releases` dan `https://maven.waltid.dev/snapshots`.
 Belum ada lock/verification metadata yang diterima untuk dependency target maupun
-build-logic. `ci/build-baseline.sh bootstrap` hanya mengumpulkan kandidat metadata;
+build-logic. [Bootstrap terisolasi](https://github.com/nusacred-lab/waltid-identity/actions/runs/39398624224)
+pada commit `81268c0739156071a2c61626a247ed4ae748fc4a` berhasil membangun
+ketiga fat JAR API2 dalam 15 menit 1 detik. Ini belum build atau uji image.
+Artefak `12253803181` menghasilkan 156 lockfile dan verification metadata dengan
+1.866 komponen serta 3.402 entri SHA-256. Seluruhnya masih kandidat yang belum diterima.
+
+Review menunjukkan COSE snapshot tercatat pada lockfile ketiga API2 dan 33 lockfile
+secara keseluruhan, tetapi tidak ada komponen `org.cose` pada verification metadata.
+Ini sesuai keterbatasan [dependency verification Gradle](https://docs.gradle.org/current/userguide/dependency_verification.html)
+untuk changing/SNAPSHOT dependency. Build 9.8.0 juga memberi peringatan bahwa
+locking snapshot tidak membekukan isi artefak. Mode strict tidak boleh diklaim
+melindungi artefak tersebut hanya karena metadata checksum lain sudah tersedia.
+
+`ci/build-baseline.sh bootstrap` hanya mengumpulkan kandidat metadata;
 `verify` menolak metadata yang belum tersedia dan memakai verifikasi strict.
 Jangan menjalankan write-metadata pada jalur rilis untuk menerima checksum baru.
 
@@ -95,8 +108,12 @@ hasil pemeriksaan seluruh dependency rilis.
 
 ## Gerbang berikutnya
 
-1. Selesaikan build tiga API2 pada runner sementara tanpa secret produksi.
-2. Review candidate locks/checksums serta asal seluruh artefak teresolusi dan plugin.
+1. Tetapkan perbaikan COSE yang dapat diverifikasi: bangun dari source terpatok
+   dengan dependency/POM serta lisensi yang diperiksa dan identitas artefak immutable,
+   atau gunakan artefak immutable lain yang asal source/binary-nya dapat dibuktikan.
+   Jangan mengganti dengan COSE upstream umum tanpa uji kompatibilitas.
+2. Review candidate locks/checksums serta asal seluruh artefak teresolusi dan plugin;
+   ulangi build strict setelah celah SNAPSHOT ditutup.
 3. Scan JAR/image target, hasilkan SBOM hasil resolusi dan image, ukur freshness DB.
 4. Ulangi alur credential nyata pada image fork yang sama dan rekam commit/digest.
 5. Tinjau temuan inherited satu per satu; dokumentasikan pengecualian false positive
