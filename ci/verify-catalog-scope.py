@@ -28,8 +28,11 @@ files = {str(p) for p in Path(catalog).rglob('*') if p.is_file()}
 require(files == set(original) | {catalog + 'README.md'}, 'Catalog must remain source-only')
 for filename in ['docker-compose/docker-compose.yaml', 'docker-compose/Caddyfile']:
     content = Path(filename).read_text()
-    require('web-portal2:' not in content and 'vc-repo:' not in content,
+    require('web-portal2' not in content and 'vc-repo' not in content,
             'Retired service/proxy reference remains: ' + filename)
+environment = Path('docker-compose/.env.example').read_text()
+require(not any(line.startswith(('WEB_PORTAL2_', 'VC_REPO_PORT=', 'VERSION_VC_REPO='))
+                for line in environment.splitlines()), 'Retired environment setting remains')
 lock = json.loads(Path('waltid-applications/waltid-digital-credentials/package-lock.json').read_text())
 require(not any(p.endswith(('/node-forge', '/braces')) for p in lock['packages']),
         'Retained example reintroduced vulnerable dependency family')
