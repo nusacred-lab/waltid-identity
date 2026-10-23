@@ -1,5 +1,5 @@
-# Official Temurin 21 JRE / Ubuntu 24.04, reviewed linux/amd64 manifest.
-FROM docker.io/library/eclipse-temurin@sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c
+# Shared P6 JVM runtime with patched Temurin and CA trust; synthetic demo only.
+FROM ghcr.io/nusacred-lab/competency-proof-jvm-runtime@sha256:ecbcd98b260eac22078f57b46422999409094325a44d5f12e2f0b8ac6de90a89
 ARG SERVICE
 ARG RUNTIME_UID=10001
 ARG SOURCE_REVISION

@@ -104,7 +104,7 @@ for service in ("issuer", "wallet", "verifier"):
     records.append({"service": service, "sourceCommit": os.environ["GITHUB_SHA"],
         "localImageConfigDigest": image["Id"], "registryPublished": False,
         "scope": "synthetic-isolated-demo-only", "productionEligible": False,
-        "basePlatformManifestDigest": "sha256:da0f0d242bec39e3fe5c1ac4c415840f03be9cef848c243d723166708e02148c",
+        "baseRuntimeImage": "ghcr.io/nusacred-lab/competency-proof-jvm-runtime@sha256:ecbcd98b260eac22078f57b46422999409094325a44d5f12e2f0b8ac6de90a89",
         "fatJarSha256": hashlib.sha256(jar.read_bytes()).hexdigest()})
 (evidence / "reports/images-tested.json").write_text(json.dumps(records, indent=2) + "\n")
 PYTHON
